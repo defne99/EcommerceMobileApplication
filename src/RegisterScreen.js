@@ -6,10 +6,11 @@ import {
     TextInput,
     StyleSheet,
     TouchableOpacity,
-    Text,
+    Text, Image, ImageBackground, Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthContext} from '../App';
+import Input from './components/Input';
 
 function RegisterScreen({navigation}){
 
@@ -22,39 +23,37 @@ function RegisterScreen({navigation}){
     const[address, setAddress]=useState("")
 
 
-    function renderPasswordTextInput(){
-        return<TextInput
-            placeholder={"Password"}
-            style={[styles.defaultTextInputStyle, {marginTop:12 }]}
-            onChangeText={setPassword}
-            secureTextEntry={true}
-            value={password}/>
-    }
-    function renderSecondPasswordTextInput(){
-        return<TextInput
-            placeholder={"Password Again"}
-            style={[styles.defaultTextInputStyle, {marginTop:12}]}
-            onChangeText={setPasswordSecond}
-            secureTextEntry={true}
-            value={passwordSecond}/>
-    }
-    function renderNameSurnameTextInput(){
-        return<TextInput
-            placeholder={"Name - Surname"}
-            style={[styles.defaultTextInputStyle, {marginTop:12}]}
-            onChangeText={setNameSurname}
-            value={nameSurname}/>
-    }
-
-
-    function renderMailTextInput(){
-        return<TextInput
-            placeholder={"Mail Address"}
-            style={[styles.defaultTextInputStyle, {marginTop:12}]}
-            onChangeText={setAddress}
-            value={address}/>
-    }
     function onSavePressed(){
+        if(nameSurname==="" && password==="" && passwordSecond==="" && address===""){
+            Alert.alert("Warning", "Please fill out the form");
+            return false
+        }
+        if(password==="" && passwordSecond==="" && address===""){
+            Alert.alert("Warning", "Please enter your email and password");
+            return false
+        }
+        if(nameSurname===""){
+            Alert.alert("Warning", "Please enter your Name and Surname");
+            return false
+        }
+        if(address===""){
+            Alert.alert("Warning", "Please enter your Email");
+            return false
+        }
+        if(password===""){
+            Alert.alert("Warning", "Please enter your password");
+            return false
+        }
+        if(passwordSecond===""){
+            Alert.alert("Warning", "Please verify your password");
+            return false
+        }
+
+        if(password!==passwordSecond){
+            Alert.alert("Warning", "Please verify your password");
+            return false
+        }
+
         const jsonValue = JSON.stringify(false) // file to string
         AsyncStorage.setItem('isRegisterIn', jsonValue)
             .then(() => {
@@ -83,33 +82,52 @@ function RegisterScreen({navigation}){
     }
     return (
         <SafeAreaView style={{flex: 1}}>
-            <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                marginLeft:32,
-                marginRight:32
-            }}>
+            <View style={styles.container}>
 
-                {renderNameSurnameTextInput()}
-                {renderMailTextInput()}
-                {renderPasswordTextInput()}
-                {renderSecondPasswordTextInput()}
+                <Image
+                    style={{width:350, height:100, justifyContent: 'center', opacity:1.0, marginBottom: 20}}
+                    source={require('../assets/logo.jpg')}
+                />
+                <Image
+                    style={styles.backgroundImage}
+                    source={require('../assets/photo4.png')}
+                />
+                <Input setValue={setNameSurname}
+                       placeholderText="Name - Surname"
+                       value={nameSurname}
+                       keyboardType="default"
+                />
+                <Input setValue={setAddress}
+                       placeholderText="Mail Address"
+                       value={address}
+                       keyboardType="email-address"
+                />
+                <Input setValue={setPassword}
+                       placeholderText="Password"
+                       value={password}
+                       isSecureText={true}
+                       keyboardType="default"
+                />
+                <Input setValue={setPasswordSecond}
+                       placeholderText="Password Again"
+                       value={passwordSecond}
+                       isSecureText={true}
+                       keyboardType="default"
+                />
                 {renderSaveButton()}
                 {renderReturnButton()}
+
             </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    defaultTextInputStyle:{
-        borderWidth: 1,
-        borderRadius: 8,
-        borderColor: "#0c0c0c",
-        height: 48,
-        paddingLeft:12,
-        fontSize:16,
-
+    container:{
+        flex: 1,
+        justifyContent: 'center',
+        marginLeft:32,
+        marginRight:32
     },
     buttonStyle:{
         height: 42,
@@ -131,6 +149,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         color: '#faf8f8'
+    },
+    backgroundImage:{
+        position: 'absolute',
+        bottom: 253,
+        left:0,
+        opacity: 0.4,
+        width:340,
+        height:260,
+        transform:[{scaleX:-1}]
     },
 });
 

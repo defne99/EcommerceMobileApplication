@@ -26,6 +26,10 @@ function LogInScreen({ navigation }){
 
 
     function onLogInPressed(){
+        if(email === "" && password === ""){
+            Alert.alert("Warning", "Please fill out the form");
+            return false
+        }
         if(email === ""){
             Alert.alert("Warning", "Please enter your email");
             return false
@@ -36,22 +40,21 @@ function LogInScreen({ navigation }){
         }
 
         /*fetch("127.0.0.1:8080/login",{
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify({
                 email,
                 password
-            }) // body data type must match "Content-Type" header
+            })
         })
             .then ((result) => {
-                AsyncStorage.setItem('isLoggedIn', result) // backendte ne donuyor? token?
+                AsyncStorage.setItem('isLoggedIn', result)
                     .then(() => {
                         logIn();
                     });
-            }) .catch(error => { // backend {success:false,message:"Please..."}
+            }) .catch(error => {
                 console.warn(error)
                 Alert.alert("Warning", "Please check your information")
         }) */
@@ -139,14 +142,6 @@ function LogInScreen({ navigation }){
 
 const styles = StyleSheet.create({
 
-    defaultTextInputStyle: {
-        borderWidth: 1,
-        borderRadius: 8,
-        height: 48,
-        fontSize: 16,
-        paddingLeft: 12,
-
-    },
     forgotPasswordStyle: {
         marginTop: 7
     },
@@ -169,7 +164,7 @@ const styles = StyleSheet.create({
         height: 42,
         borderWidth: 1,
         borderRadius: 16,
-        marginTop: 15,
+        marginTop: 3,
         justifyContent: 'center',
         flexDirection: 'column',
         backgroundColor: '#ff9c33',
