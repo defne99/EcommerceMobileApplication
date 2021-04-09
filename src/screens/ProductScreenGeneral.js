@@ -2,17 +2,17 @@ import {SafeAreaView, View, Text} from 'react-native';
 import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AuthContext} from '../App';
+import {AuthContext} from '../../App';
 
-function ProductsScreen({navigation}) {
+function ProductScreenGeneral({navigation}) {
 
-    const { logOut } = React.useContext(AuthContext);
+    const { GoBack } = React.useContext(AuthContext);
 
-    function onLogOutPressed() {
+    function onLogOutGeneralPressed() {
         const jsonValue = JSON.stringify(false)
         AsyncStorage.setItem('isLoggedIn', jsonValue) // when isLoggedIn false we log out
             .then(() => {
-                logOut();
+                navigation.goBack();
             });
     }
 
@@ -21,12 +21,12 @@ function ProductsScreen({navigation}) {
             flex:1,
             justifyContent: 'center',
         }}>
-            <Text> This is Products Screen</Text>
-            <TouchableOpacity style={{height: 24, margin: 24}} onPress={() => onLogOutPressed()}>
-                <Text>Log Out</Text>
+            <Text> This is General Product Screen without Logging In</Text>
+            <TouchableOpacity style={{height: 24, margin: 24}} onPress={() => onLogOutGeneralPressed()}>
+                <Text>Return Back</Text>
             </TouchableOpacity>
         </View>
     </SafeAreaView>
 }
 
-export default ProductsScreen;
+export default ProductScreenGeneral;

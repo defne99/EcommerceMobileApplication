@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, {useState} from 'react';
 
 import {
     SafeAreaView,
@@ -9,97 +9,117 @@ import {
     Text, Image, ImageBackground, Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AuthContext} from '../App';
-import Input from './components/Input';
+import Input from '../components/Input';
+import Images from "../constants/Images";
 
-function RegisterScreen({navigation}){
-
-    const { Save } = React.useContext(AuthContext);
-    const { Return } = React.useContext(AuthContext);
-
-    const[nameSurname, setNameSurname]=useState("")
-    const[password, setPassword]=useState("")
-    const[passwordSecond, setPasswordSecond]=useState("")
-    const[address, setAddress]=useState("")
+function RegisterScreen({navigation}) {
 
 
-    function onSavePressed(){
-        if(nameSurname==="" && password==="" && passwordSecond==="" && address===""){
+    const [nameSurname, setNameSurname] = useState("")
+    const [password, setPassword] = useState("")
+    const [passwordSecond, setPasswordSecond] = useState("")
+    const [email, setEmail] = useState("")
+
+
+    function onSavePressed() {
+        if (nameSurname === "" && password === "" && passwordSecond === "" && email === "") {
             Alert.alert("Warning", "Please fill out the form");
             return false
         }
-        if(password==="" && passwordSecond==="" && address===""){
+        if (password === "" && passwordSecond === "" && email === "") {
             Alert.alert("Warning", "Please enter your email and password");
             return false
         }
-        if(nameSurname===""){
+        if (nameSurname === "") {
             Alert.alert("Warning", "Please enter your Name and Surname");
             return false
         }
-        if(address===""){
+        if (email === "") {
             Alert.alert("Warning", "Please enter your Email");
             return false
         }
-        if(password===""){
+        if (password === "") {
             Alert.alert("Warning", "Please enter your password");
             return false
         }
-        if(passwordSecond===""){
+        if (passwordSecond === "") {
             Alert.alert("Warning", "Please verify your password");
             return false
         }
 
-        if(password!==passwordSecond){
-            Alert.alert("Warning", "Please verify your password");
+        if (password !== passwordSecond) {
+            Alert.alert("Warning", "Passwords do not match");
             return false
         }
 
-        const jsonValue = JSON.stringify(false) // file to string
-        AsyncStorage.setItem('isRegisterIn', jsonValue)
-            .then(() => {
-                navigation.goBack();
-            });}
-    function onReturnPressed() {
-        const jsonValue = JSON.stringify(false)
-        AsyncStorage.setItem('isRegisterIn', jsonValue) // when isLoggedIn false we log out
-            .then(() => {
-                navigation.goBack();
-            });
+
+        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/register/addUser", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nameSurname,
+                email,
+                password,
+                passwordSecond,
+            })
+        })
+            .then((result) => {
+                console.log(result)
+                /*AsyncStorage.setItem('isLoggedIn', result)
+                    .then(() => {
+                        logIn();
+                    });*/
+            }).catch(error => {
+            console.warn(error)
+            Alert.alert("Warning", "Please check your information")
+        })
+
+
+        navigation.goBack();
     }
-    function renderSaveButton(){
+
+    function onReturnPressed() {
+        navigation.goBack();
+    }
+
+    function renderSaveButton() {
         return <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => onSavePressed()}>
             <Text style={styles.saveTextStyle}> SAVE </Text>
         </TouchableOpacity>
     }
-    function renderReturnButton(){
+
+    function renderReturnButton() {
         return <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => onReturnPressed()}>
             <Text style={styles.returnTextStyle}> RETURN </Text>
         </TouchableOpacity>
     }
+
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={styles.container}>
 
                 <Image
-                    style={{width:350, height:100, justifyContent: 'center', opacity:1.0, marginBottom: 20}}
-                    source={require('../assets/logo.jpg')}
+                    style={{width: 350, height: 100, justifyContent: 'center', opacity: 1.0, marginBottom: 20}}
+                    source={Images.LOGO}
                 />
                 <Image
                     style={styles.backgroundImage}
-                    source={require('../assets/photo4.png')}
+                    source={Images.PHOTO_4}
                 />
                 <Input setValue={setNameSurname}
                        placeholderText="Name - Surname"
                        value={nameSurname}
                        keyboardType="default"
                 />
-                <Input setValue={setAddress}
-                       placeholderText="Mail Address"
-                       value={address}
+                <Input setValue={setEmail}
+                       placeholderText="E-mail"
+                       value={email}
                        keyboardType="email-address"
                 />
                 <Input setValue={setPassword}
@@ -123,13 +143,13 @@ function RegisterScreen({navigation}){
 }
 
 const styles = StyleSheet.create({
-    container:{
+    container: {
         flex: 1,
         justifyContent: 'center',
-        marginLeft:32,
-        marginRight:32
+        marginLeft: 32,
+        marginRight: 32
     },
-    buttonStyle:{
+    buttonStyle: {
         height: 42,
         borderWidth: 1,
         borderRadius: 16,
@@ -139,25 +159,25 @@ const styles = StyleSheet.create({
         backgroundColor: '#ff9c33',
         borderColor: '#FF9C33'
     },
-    saveTextStyle:{
+    saveTextStyle: {
         textAlign: 'center',
         fontSize: 20,
         color: '#faf8f8'
 
     },
-    returnTextStyle:{
+    returnTextStyle: {
         textAlign: 'center',
         fontSize: 20,
         color: '#faf8f8'
     },
-    backgroundImage:{
+    backgroundImage: {
         position: 'absolute',
         bottom: 253,
-        left:0,
+        left: 0,
         opacity: 0.4,
-        width:340,
-        height:260,
-        transform:[{scaleX:-1}]
+        width: 340,
+        height: 260,
+        transform: [{scaleX: -1}]
     },
 });
 

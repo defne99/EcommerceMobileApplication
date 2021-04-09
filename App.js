@@ -1,21 +1,17 @@
-import React, {useEffect} from 'react';
-import LogInScreen from './src/screens/LogInScreen';
 import 'react-native-gesture-handler';
-import { createStackNavigator } from '@react-navigation/stack';
-import ProductsScreen from './src/ProductsScreen';
-import SplashScreen from './src/SplashScreen';
-import RegisterScreen from './src/RegisterScreen';
-import ProductScreenGeneral from './src/ProductScreenGeneral';
+import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {NavigationContainer} from '@react-navigation/native';
-import StackNavigator from '@react-navigation/stack/src/navigators/createStackNavigator';
+import NavigationContainerContent from "./src/navigation/navigationContainer";
+import SplashScreen from './src/screens/SplashScreen';
 
 
-export const AuthContext = React.createContext();
+//export const AuthContext = React.createContext();
 
 function App() {
 
-    const [state, dispatch] = React.useReducer(
+    const [isSplash, setIsSplash] = useState(true);
+
+    /*const [state, dispatch] = React.useReducer(
         (prevState, action) => {
             switch (action.type) {
                 case 'LOG_IN':
@@ -23,7 +19,7 @@ function App() {
                         ...prevState,
                         isLoggedIn: true,
                         isLoading: false,
-                        isRegisterIn:false
+                        isRegisterIn: false
 
                     };
                 case 'LOG_OUT':
@@ -32,90 +28,70 @@ function App() {
                         ...prevState,
                         isLoggedIn: false,
                         isLoading: false,
-                        isRegisterIn:false
+                        isRegisterIn: false
 
                     };
                 case 'REGISTER':
-                    return{
+                    return {
                         ...prevState,
-                        isLoading:false,
+                        isLoading: false,
                         isLoggedIn: false,
-                        isRegisterIn:true
+                        isRegisterIn: true
                     }
                 case'RETURN':
                 case 'SAVE':
-                    return{
-                        isLoading:false,
+                    return {
+                        isLoading: false,
                         isLoggedIn: false,
-                        isRegisterIn:false
+                        isRegisterIn: false
                     }
             }
         },
         {
             isLoading: true,
             isLoggedIn: false,
-            isRegisterIn:false
+            isRegisterIn: false
 
         }
-    );
+    );*/
 
     useEffect(() => {
-        AsyncStorage.getItem('isLoggedIn')
+        /*AsyncStorage.getItem('isLoggedIn')
             .then((value) => {
                 value = value ? JSON.parse(value) : null; // back to json
                 if (value === true) {
-                    dispatch({ type: 'LOG_IN' });
-                }
-                else{
+                    dispatch({type: 'LOG_IN'});
+                } else {
                     dispatch({type: 'NEW_USER'});
                 }
-            })
-    },[]);
+            })*/
+
+        setTimeout(() => {
+            setIsSplash(false);
+        }, 3000)
+    }, []);
 
 
     const authContext = React.useMemo(
         () => ({
-            logIn: () => dispatch({ type: 'LOG_IN' }),
-            logOut: () => dispatch({ type: 'LOG_OUT' }),
-            newUser: () => dispatch({ type: 'NEW_USER' }),
-            Register: () => dispatch({ type: 'REGISTER'}),
-            Return: () => dispatch({ type: 'RETURN'}),
-            Save: () => dispatch({ type: 'SAVE'}),
+            logIn: () => dispatch({type: 'LOG_IN'}),
+            logOut: () => dispatch({type: 'LOG_OUT'}),
+            newUser: () => dispatch({type: 'NEW_USER'}),
+            Register: () => dispatch({type: 'REGISTER'}),
+            Return: () => dispatch({type: 'RETURN'}),
+            Save: () => dispatch({type: 'SAVE'}),
         }),
         [],
     );
 
-    const Stack = createStackNavigator();
 
-    if (state.isLoading) {
-        // We do not know if the user in logged in or not, we didn't fetch the relevant info
-        return <SplashScreen />; // user seeing splash screen
+    if (isSplash) {
+        return <SplashScreen/>;
     }
 
-    return (
-        <AuthContext.Provider value={authContext}>
-            <NavigationContainer>
-                <Stack.Navigator initialRouteName="LogInScreen"
-                                 screenOptions={{
-                                     headerShown: false,}}>
-                    {state.isLoggedIn ? (
+    return <NavigationContainerContent/>
 
-                        <>
-                            <Stack.Screen name="ProductsScreen" component={ProductsScreen} />
-                        </>
-                    ):(
-                        <>
 
-                            <Stack.Screen name="Welcome" component={LogInScreen} />
-                            <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-                            <Stack.Screen name="ProductScreenGeneral" component={ProductScreenGeneral} />
-                        </>
-                    )}
-
-                </Stack.Navigator>
-            </NavigationContainer>
-        </AuthContext.Provider>
-    );
-};
+}
 
 export default App;

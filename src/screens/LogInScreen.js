@@ -1,4 +1,3 @@
-
 import React, {useState} from 'react';
 
 import {
@@ -13,33 +12,35 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthContext} from '../../App';
-import RegisterScreen from '../RegisterScreen';
-import ProductScreenGeneral from '../ProductScreenGeneral';
+import RegisterScreen from './RegisterScreen';
+import ProductScreenGeneral from './ProductScreenGeneral';
 import Input from "../components/Input";
+import Helper from "../services/Helper";
 
-function LogInScreen({ navigation }){
-    const { logIn } = React.useContext(AuthContext);
-    const { Register } = React.useContext(AuthContext);
+function LogInScreen(props) {
+
+    const {navigation} = props;
+
 
     const [email, setEmail] = useState(""); // value to username with setUsername function
     const [password, setPassword] = useState("");
 
 
-    function onLogInPressed(){
-        if(email === "" && password === ""){
+    function onLogInPressed() {
+        if (Helper.isFalsy(email) && Helper.isFalsy(password)) {
             Alert.alert("Warning", "Please fill out the form");
             return false
         }
-        if(email === ""){
-            Alert.alert("Warning", "Please enter your email");
+        if (!Helper.validateEmail(email)) {
+            Alert.alert("Warning", "Please enter a correct email");
             return false
         }
-        if(password === ""){
+        if (Helper.isFalsy(password)) {
             Alert.alert("Warning", "Please enter your password");
             return false
         }
 
-        /*fetch("127.0.0.1:8080/login",{
+        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/login", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,58 +50,45 @@ function LogInScreen({ navigation }){
                 password
             })
         })
-            .then ((result) => {
-                AsyncStorage.setItem('isLoggedIn', result)
-                    .then(() => {
-                        logIn();
-                    });
-            }) .catch(error => {
-                console.warn(error)
-                Alert.alert("Warning", "Please check your information")
-        }) */
+            //.then(response => response.json())
+            .then((result) => {
+                console.log(result,"buradayım");
+                if(result.ok){
+                    AsyncStorage.setItem('isLoggedIn', "true")
+                        .then(() => {
+                            //UserStore.email=this.state.email;
+                            navigation.navigate("Products")
+                        });
+                } else {
+                    if(status === 400){
+                        Alert.alert("Error","Wrong e-mail or password!");
+                    } else {
+                        Alert.alert("Error","Something went wrong!");
+                    }
+                }
 
-        const jsonValue = JSON.stringify(true)
-        AsyncStorage.setItem('isLoggedIn', jsonValue) // commentleri kaldırınca sil bu uc satırı
-            .then(() => {
-                logIn();
-            });
-
-
-    }
-    function onRegisterPressed(){
-        const jsonValue = JSON.stringify(true) // file to string
-        AsyncStorage.setItem('isRegisterIn', jsonValue)
-            .then(() => {
-                navigation.navigate(RegisterScreen);
-            });
-    }
-    function onProceedPressed(){
-        const jsonValue = JSON.stringify(false) // file to string
-        AsyncStorage.setItem('isLoggedIn', jsonValue)
-            .then(() => {
-                navigation.navigate(ProductScreenGeneral);
-            });
-    }
-    function renderProceedButton(){
-        return <TouchableOpacity
-            style={styles.buttonStyle_proceed}
-            onPress={() => onProceedPressed()} >
-            <Text style={styles.proceed_TextStyle}>Continue Without Logging > </Text>
-        </TouchableOpacity>
+            }).catch(error => {
+            console.warn(error)
+            Alert.alert("Warning", "Please check your information")
+        })
     }
 
-    function renderLogInButton(){
+    function onRegisterPressed() {
+        navigation.navigate("Register");
+    }
+
+    function renderLogInButton() {
         return <TouchableOpacity
             style={styles.buttonStyle_login}
-            onPress={() => onLogInPressed()} >
+            onPress={() => onLogInPressed()}>
             <Text style={styles.logIn_register_TextStyle}>LOG IN</Text>
         </TouchableOpacity>
     }
 
-    function renderRegisterButton(){
+    function renderRegisterButton() {
         return <TouchableOpacity
             style={styles.buttonStyle_register}
-            onPress={() => onRegisterPressed()} >
+            onPress={() => onRegisterPressed()}>
             <Text style={styles.logIn_register_TextStyle}>REGISTER</Text>
         </TouchableOpacity>
     }
@@ -109,14 +97,14 @@ function LogInScreen({ navigation }){
         <SafeAreaView style={{flex: 1}}>
 
             <View style={{
-                flex:1,
+                flex: 1,
                 justifyContent: 'center',
                 marginLeft: 16,
                 marginRight: 16,
             }}>
 
                 <Image
-                    style={{width:380, height:210, justifyContent: 'center'}}
+                    style={{width: 380, height: 210, justifyContent: 'center'}}
                     source={require('../../assets/photo2.jpg')}
                 />
                 <Input
@@ -134,7 +122,6 @@ function LogInScreen({ navigation }){
                 {renderLogInButton()}
                 {renderRegisterButton()}
                 <Text style={styles.forgotPasswordStyle}> Forgot Password?</Text>
-                {renderProceedButton()}
             </View>
         </SafeAreaView>
     );
@@ -152,13 +139,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 16,
         marginTop: 10,
-        justifyContent:'center',
+        justifyContent: 'center',
         flexDirection: 'column',
         backgroundColor: '#faf9f7',
         borderColor: '#faf9f7',
         position: 'absolute',
-        bottom:0,
-        left:190, },
+        bottom: 0,
+        left: 190,
+    },
 
     buttonStyle_login: {
         height: 42,
@@ -183,12 +171,14 @@ const styles = StyleSheet.create({
     logIn_register_TextStyle: {
         textAlign: 'center',
         fontSize: 20,
-        color: '#faf8f8'},
+        color: '#faf8f8'
+    },
 
     proceed_TextStyle: {
         textAlign: 'center',
         fontSize: 14,
-        color: '#0c0c0c'},
+        color: '#0c0c0c'
+    },
 
 });
 
