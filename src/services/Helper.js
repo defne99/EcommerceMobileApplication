@@ -17,3 +17,4 @@ export default class Helper {
         return regex.test(mobilePhone);
     }
 }
+
