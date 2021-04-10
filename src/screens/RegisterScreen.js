@@ -77,6 +77,7 @@ function RegisterScreen({navigation}) {
         })
 
 
+
         navigation.goBack();
     }
 
