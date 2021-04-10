@@ -48,7 +48,6 @@ function SubCategoriesScreen({route, navigation}) {
     </SafeAreaView>
 }
 
-
 const styles = StyleSheet.create({
     container: {
         width: "100%",
