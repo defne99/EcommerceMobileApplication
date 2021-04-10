@@ -1,4 +1,4 @@
-// kategorideki itemlarrın özelliklerini genelledik
+// kategorideki itemlarrın özelliklerini genel
 
 import React from "react";
 import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
