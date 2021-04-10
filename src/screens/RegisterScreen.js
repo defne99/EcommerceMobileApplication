@@ -76,8 +76,6 @@ function RegisterScreen({navigation}) {
             Alert.alert("Warning", "Please check your information")
         })
 
-
-
         navigation.goBack();
     }
 
