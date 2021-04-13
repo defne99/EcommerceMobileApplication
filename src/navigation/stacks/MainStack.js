@@ -30,7 +30,20 @@ const MainStack = ({route, navigation}) => {
         >
             <Main.Screen name="Products" component={ProductsScreen} />
             <Main.Screen name="Categories" component={CategoriesScreen} />
-            <Main.Screen name="SubCategories" component={SubCategoriesScreen} />
+            <Main.Screen
+                name="SubCategories"
+                component={SubCategoriesScreen}
+                options={{
+                    headerLeft: () => (
+                        <TouchableOpacity
+                            onPress={() => navigation.goBack()}
+                            style={{paddingLeft: 15}}
+                        >
+                            <Icon name="chevron-left" size={22} />
+                        </TouchableOpacity>
+                    )
+                }}
+            />
             <Main.Screen name="BooksListScreen" component={BooksListScreen} />
             <Main.Screen
                 name="Auth"
