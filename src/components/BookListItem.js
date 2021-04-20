@@ -14,9 +14,10 @@ const BookListItem = (props) => {
         authorTextStyle,
         authorName,
         bookId,
-        cost,
-        costStyle,
-        navigatePage
+        price,
+        priceStyle,
+        navigatePage,
+        currency
     } = props;
     return (
         <TouchableOpacity
@@ -39,8 +40,8 @@ const BookListItem = (props) => {
                 </Text>
 
                 <Text
-                    style={[styles.costStyle, costStyle]}>
-                    {cost}
+                    style={[styles.priceStyle, priceStyle]}>
+                    {currency}{price}
                 </Text>
             </View>
         </TouchableOpacity>
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         textAlign: 'center',
     },
-    costStyle:{
+    priceStyle:{
         fontWeight: 'bold',
         fontSize: 20,
         color: '#FF8303',
@@ -100,9 +101,10 @@ BookListItem.propTypes = {
     authorTextStyle: PropTypes.object,
     authorName: PropTypes.string.isRequired,
     navigatePage: PropTypes.string,
+    currency: PropTypes.string,
     bookId: PropTypes.number.isRequired,
-    cost: PropTypes.string.isRequired,
-    costStyle: PropTypes.object
+    price: PropTypes.number.isRequired,
+    priceStyle: PropTypes.object
 }
 
 BookListItem.defaultProps = {
@@ -111,8 +113,9 @@ BookListItem.defaultProps = {
     detailStyle: {},
     bookNameTextStyle: {},
     authorTextStyle: {},
-    costStyle: {},
+    priceStyle: {},
     navigatePage: "Detail",
+    currency: "$",
 }
 
 

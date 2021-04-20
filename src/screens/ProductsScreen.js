@@ -137,18 +137,20 @@ function ProductsScreen({navigation}) {
                     <BookListItem
                         uri='https://images-na.ssl-images-amazon.com/images/I/51k+lXZyJ6L._SX322_BO1,204,203,200_.jpg'
                         authorName="Amor Towles"
-                        cost="$148.31"
+                        price={148.31}
                         bookId={1}
                         _handleNavigate={_handleNavigate}
-                        bookName="A Gentleman In Moscow" />
+                        bookName="A Gentleman In Moscow"
+                    />
 
                     <BookListItem
                         uri='https://images-na.ssl-images-amazon.com/images/I/51C-KZLZsCL._SX330_BO1,204,203,200_.jpg'
                         authorName="James Joyce"
-                        cost="$76.03"
+                        price={76.03}
                         bookId={2}
                         _handleNavigate={_handleNavigate}
-                        bookName="Ulysses" />
+                        bookName="Ulysses"
+                    />
 
                     <TouchableOpacity
                         //onPress={() => navigation.navigate("Detail")}

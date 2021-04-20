@@ -11,7 +11,7 @@ const FilterSubCategoryItem = (props) => {
     const subCategoryName = Object.keys(subCategory).length > 0  ? subCategory.name : "All";
     return (
         <TouchableOpacity
-            onPress={() => {_handleFilter(subCategoryId)}}
+            onPress={() => {_handleFilter(subCategoryId, subCategoryName)}}
             key={subCategoryId.toString()}
         >
             <View
