@@ -16,6 +16,7 @@ import RegisterScreen from './RegisterScreen';
 import ProductScreenGeneral from './ProductScreenGeneral';
 import Input from "../components/Input";
 import Helper from "../services/Helper";
+import MyFetch from "../services/fetch";
 
 function LogInScreen(props) {
 
@@ -50,6 +51,7 @@ function LogInScreen(props) {
                 password
             })
         })
+        //MyFetch("/login", "POST", {email, password})
             //.then(response => response.json())
             .then((result) => {
                 console.log(result,"buradayım");

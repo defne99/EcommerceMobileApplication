@@ -19,6 +19,7 @@ function SubCategoriesScreen({route, navigation}) {
     useEffect(() => {
         console.log(route);
         const {categoryId} = route.params;
+
         let category = Categories.filter(category => {
             if (category.id === categoryId) {
                 navigation.setOptions({title: category.name});
@@ -26,6 +27,21 @@ function SubCategoriesScreen({route, navigation}) {
                 return category;
             }
         })
+
+        // localhost:8080/products/1/category
+/*        fetch("localhost:8080/getProductsByCategory?category=" + categoryName, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(result => {
+
+        }).catch(error => {
+            console.log("subCategoryScreen -> useEffect ->catch:", error);
+        })*/
+
+
+
         if (!Helper.isFalsy(category)) {
             setSubCategories(category[0]["subCategories"]);
         } else {
