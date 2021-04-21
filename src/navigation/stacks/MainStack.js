@@ -24,8 +24,8 @@ const MainStack = ({route, navigation}) => {
                     </TouchableOpacity>
                 ),
             }}>
-            <Main.Screen name="Products" component={ProductsScreen} />
-            <Main.Screen name="Categories" component={CategoriesScreen} />
+            <Main.Screen name="Products" component={ProductsScreen} options={{headerTitle: ""}} />
+            <Main.Screen name="Categories" component={CategoriesScreen} options={{headerTitle: ""}} />
             <Main.Screen
                 name="SubCategories"
                 component={SubCategoriesScreen}

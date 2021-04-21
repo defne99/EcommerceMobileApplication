@@ -22,6 +22,7 @@ function SubCategoriesScreen({route, navigation}) {
 
     const products = [
         {
+            "productId": 30,
             "productName": "Dokuza Kadar On",
             "category": "Poetry",
             "genre": "Turkish Poetry",
@@ -39,6 +40,7 @@ function SubCategoriesScreen({route, navigation}) {
         }
         ,
         {
+            "productId": 31,
             "productName": "Around the World in Eighty Days",
             "category": "Novel",
             "genre": "Adventure",
@@ -58,6 +60,7 @@ function SubCategoriesScreen({route, navigation}) {
         }
         ,
         {
+            "productId": 32,
             "productName": "Elizabeth & Margaret: The Intimate World of the Windsor Sisters",
             "category": "Biography",
             "year": "2021",
@@ -76,6 +79,7 @@ function SubCategoriesScreen({route, navigation}) {
         }
         ,
         {
+            "productId": 33,
             "productName": "The Essential New York Times Cookbook: Classic Recipes for a New Century",
             "category": "Cookbook",
             "year": "2010",
@@ -92,6 +96,7 @@ function SubCategoriesScreen({route, navigation}) {
         }
         ,
         {
+            "productId": 34,
             "productName": "Who Fears Death",
             "category": "Novel",
             "genre": "Fantasy",
@@ -134,12 +139,13 @@ function SubCategoriesScreen({route, navigation}) {
         setBooks(products); // fetchi acinca sil
         //setIsLoading(true);
         // localhost:8080/products/1/category
-        /*      fetch("localhost:8080/getProductsByCategory?category=" + categoryName, {
+        /*      fetch("http://localhost:8080/getProductsByCategory?category=" + categoryName, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                 }).then(products => {
+                console.log("products->1: ",products);
                     if(products){
                         setBooks(products);
                     } else {
@@ -164,12 +170,13 @@ function SubCategoriesScreen({route, navigation}) {
         //setIsLoading(true);
         if (subCategoryId === 0) { // for "All"
             navigation.setOptions({title: categoryName}); // all oldugunda title genre adi
-            /*fetch("localhost:8080/getProductsByCategory?category=" + categoryName, {
+            /*fetch("http://localhost:8080/getProductsByCategory?category=" + categoryName, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
             }).then(products => {
+            console.log("products->2: ", products);
                 if(products){
                     setBooks(products);
                 } else {
@@ -189,12 +196,13 @@ function SubCategoriesScreen({route, navigation}) {
                 }
             })
 
-            /*fetch("localhost:8080/getProductsByGenre?genre=" + subCategoryName, {
+            /*fetch("http://localhost:8080/getProductsByGenre?genre=" + subCategoryName, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
         }).then(products => {
+        console.log("products->3: ", products);
             if(products){
                 setBooks(products);
             } else {
@@ -245,6 +253,7 @@ function SubCategoriesScreen({route, navigation}) {
                             <FilterSubCategoryItem
                                 _handleFilter={_handleFilter}
                                 subCategory={subCategory}
+                                key={Math.random().toString()}
                             />
                         )
                     })
@@ -263,6 +272,7 @@ function SubCategoriesScreen({route, navigation}) {
                         data={books}
                         renderItem={renderItem}
                         numColumns={2}
+                        keyExtractor={(item, index) => item.productId.toString()}
                     />
             }
 
