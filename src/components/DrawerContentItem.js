@@ -12,7 +12,7 @@ const DrawerContentItem = (props) => {
         <TouchableOpacity onPress={onPress}>
             <View style={styles.container}>
                 <View style={styles.leftPart}>
-                    <Icon name={icon} size={iconSize} color={Colors.DARK_BLUE} solid={true} />
+                    <Icon name={icon} size={iconSize} color={Colors.MIDDLE_GRAY} solid={true} />
                 </View>
                 <View style={styles.rightPart}>
                     <Text style={styles.menuTitle}>{menuTitle}</Text>
