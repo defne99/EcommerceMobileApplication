@@ -20,12 +20,7 @@ function CategoriesScreen({navigation}) {
         })
         if (!Helper.isFalsy(category)) { // ici bos gelmediyse
             category = category[0]; // 0.elemanı al
-            if (!Helper.isFalsy(category.subCategories)) { //icindeki subcategorylere bak
-                navigate("SubCategories", {categoryId}); // doluysa subcategorye git
-            } else {
-                navigate("BooksListScreen", {categoryId}); // bossa direkt kitapları goster
-            }
-
+            navigate("SubCategories", {categoryId,categoryName: category.name}); // doluysa subcategorye git
         } else {
             Alert.alert("Hata", "Böyle bir kategori bulunmamaktadır!");
         }

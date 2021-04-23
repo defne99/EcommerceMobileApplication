@@ -20,7 +20,7 @@ import BookListItem from "../components/BookListItem";
 function SubCategoriesScreen({route, navigation}) {
 
 
-    const products = [
+    /*const products = [
         {
             "productId": 30,
             "productName": "Dokuza Kadar On",
@@ -112,7 +112,7 @@ function SubCategoriesScreen({route, navigation}) {
             "currentStock": 25,
             "imgUrl": "https://images-na.ssl-images-amazon.com/images/I/51C5dkC4H+L._SX326_BO1,204,203,200_.jpg"
         }
-    ];
+    ];*/
 
     const [subCategories, setSubCategories] = useState([]);
     const [categoryName, setCategoryName] = useState("");
@@ -121,11 +121,12 @@ function SubCategoriesScreen({route, navigation}) {
 
     useEffect(() => {
         //console.log(route);
-        const {categoryId} = route.params;
+        const {categoryId, categoryName} = route.params;
 
         let category = Categories.filter(category => {
             if (category.id === categoryId) {
                 navigation.setOptions({title: category.name}); // bardaki ismi verir
+                setCategoryName(categoryName);
                 return category;
             }
         })
@@ -133,18 +134,20 @@ function SubCategoriesScreen({route, navigation}) {
         if (!Helper.isFalsy(category)) {
             setSubCategories(category[0]["subCategories"]); // subcategoryitemları verir
         } else {
-            Alert.alert("Error","Not found subcategories!");
+            Alert.alert("Error", "Category not found!");
         }
 
-        setBooks(products); // fetchi acinca sil
-        //setIsLoading(true);
+        setIsLoading(true);
         // localhost:8080/products/1/category
-        /*      fetch("http://localhost:8080/getProductsByCategory?category=" + categoryName, {
+              fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getByCategory?category=" + categoryName, {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                }).then(products => {
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                          'Accept': 'application/json'
+                      },
+                }).then(response => response.json())
+                  .then(products => {
                 console.log("products->1: ",products);
                     if(products){
                         setBooks(products);
@@ -157,7 +160,7 @@ function SubCategoriesScreen({route, navigation}) {
                     console.log("subCategoryScreen -> useEffect ->catch:", error);
                     setIsLoading(false);
                     Alert("Error","An error has occurred!");
-                })*/
+                })
 
 
     }, [])
@@ -170,12 +173,15 @@ function SubCategoriesScreen({route, navigation}) {
         //setIsLoading(true);
         if (subCategoryId === 0) { // for "All"
             navigation.setOptions({title: categoryName}); // all oldugunda title genre adi
-            /*fetch("http://localhost:8080/getProductsByCategory?category=" + categoryName, {
+            fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getByCategory?category=" + categoryName, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                    'Accept': 'application/json'
                 },
-            }).then(products => {
+            }).then(response => response.json())
+                .then(products => {
             console.log("products->2: ", products);
                 if(products){
                     setBooks(products);
@@ -184,11 +190,12 @@ function SubCategoriesScreen({route, navigation}) {
                 }
 
                 setIsLoading(false);
-            }).catch(error => {
+            })
+                .catch(error => {
                 console.log("subCategoryScreen -> useEffect ->catch:", error);
                 setIsLoading(false);
                 Alert("Error","An error has occurred!");
-            })*/
+            })
         } else {
             subCategories.filter(subCategory => { // subcateg id ye gore filtreleme
                 if (subCategory.id === subCategoryId) {
@@ -196,25 +203,30 @@ function SubCategoriesScreen({route, navigation}) {
                 }
             })
 
-            /*fetch("http://localhost:8080/getProductsByGenre?genre=" + subCategoryName, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        }).then(products => {
-        console.log("products->3: ", products);
-            if(products){
-                setBooks(products);
-            } else {
-                Alert.alert("Error","Couldn't fetch products!")
-            }
+            fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProductsByGenre?genre=" + subCategoryName, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                    'Accept': 'application/json'
+                },
+            })
+                .then(response => response.json())
+                .then(products => {
+                    console.log("products->3: ", products);
+                    if(products){
+                        setBooks(products);
+                    } else {
+                        Alert.alert("Error","Couldn't fetch products!")
+                    }
 
-            setIsLoading(false);
-        }).catch(error => {
-            console.log("subCategoryScreen -> useEffect ->catch:", error);
-            setIsLoading(false);
-            Alert("Error","An error has occurred!");
-        })*/
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    console.log("subCategoryScreen -> useEffect ->catch:", error);
+                    setIsLoading(false);
+                    Alert("Error", "An error has occurred!");
+                })
         }
 
     }
@@ -236,31 +248,40 @@ function SubCategoriesScreen({route, navigation}) {
 
     return <SafeAreaView style={{flex: 1, backgroundColor: Colors.WHITE}}>
         <View style={styles.container}>
-            <ScrollView
-                pagingEnabled={true}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                style={styles.topScrollViewStyle}
-            >
+            {
+                subCategories.length > 0 ?
 
-                <FilterSubCategoryItem
-                    _handleFilter={_handleFilter}
-                    subCategory={{}}
-                />
-                {
-                    subCategories.map(subCategory => { // subcategories arrayi icinde doner
-                        return (
-                            <FilterSubCategoryItem
-                                _handleFilter={_handleFilter}
-                                subCategory={subCategory}
-                                key={Math.random().toString()}
-                            />
-                        )
-                    })
-                }
+                    <ScrollView
+                        pagingEnabled={true}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.topScrollViewStyle}
+                    >
 
 
-            </ScrollView>
+                        <FilterSubCategoryItem
+                            _handleFilter={_handleFilter}
+                            subCategory={{}}
+                        />
+
+
+                        {
+                            subCategories.map(subCategory => { // subcategories arrayi icinde doner
+                                return (
+                                    <FilterSubCategoryItem
+                                        _handleFilter={_handleFilter}
+                                        subCategory={subCategory}
+                                        key={Math.random().toString()}
+                                    />
+                                )
+                            })
+                        }
+
+
+                    </ScrollView>
+                    :
+                    null
+            }
 
             {
                 isLoading ?
