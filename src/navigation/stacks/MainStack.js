@@ -8,6 +8,7 @@ import CategoriesScreen from '../../screens/CategoriesScreen';
 import SubCategoriesScreen from '../../screens/SubCategoriesScreen';
 import BooksListScreen from '../../screens/BooksListScreen';
 import Detail from '../../screens/Detail';
+import SearchScreen from "../../screens/SearchScreen";
 
 const Main = createStackNavigator();
 
@@ -41,6 +42,7 @@ const MainStack = ({route, navigation}) => {
             />
             <Main.Screen name="BooksListScreen" component={BooksListScreen} />
             <Main.Screen name="Detail" component={Detail} />
+            <Main.Screen name="Search" component={SearchScreen} />
             <Main.Screen
                 name="Auth"
                 component={AuthStack}

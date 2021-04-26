@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     View,
     Text,
@@ -6,13 +6,124 @@ import {
     SafeAreaView,
     StyleSheet,
     TextInput,
+    Alert,
+    ActivityIndicator, FlatList
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {Rating} from 'react-native-elements';
+import Colors from "../constants/Colors";
 
-const Detail = ({navigation}) => {
+const Detail = ({navigation, route}) => {
     const [comment, setComment] = useState('');
+    const [comments, setComments] = useState([]);
     const [userName, setUserName] = useState('');
+    const [bookDetail, setBookDetail] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [rate, setRate] = useState(0.0);
+
+    const bookDetailResponse = {
+        "productId": 30,
+        "productName": "Dokuza Kadar On",
+        "category": "Poetry",
+        "genre": "Turkish Poetry",
+        "year": "2017",
+        "description": "Yalnızlık paylaşılmaz Paylaşılsa yalnızlık olmaz.(Tanıtım Bülteninden)",
+        "writer": "Özdemir Asaf",
+        "distributor": "Yapı Kredi Yayınları",
+        "warrantyDaysLeft": 30,
+        "initialPrice": 10.0,
+        "currentPrice": 10.0,
+        "discountRatio": 0,
+        "initialStock": 35,
+        "currentStock": 27,
+        "imgUrl": "https://i.dr.com.tr/cache/600x600-0/originals/0000000330969-1.jpg"
+    }
+
+    useEffect(() => {
+        let {bookId} = route.params;
+        bookId = 3;
+        setIsLoading(true);
+        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProduct?productId=" + bookId, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                'Accept': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(bookDetail => {
+                console.log(bookDetail);
+                setBookDetail(bookDetailResponse); // localde bookDetail
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.log("Detail -> useEffect ->catch:", error);
+                setIsLoading(false);
+                Alert("Error", "An error has occurred!");
+            })
+
+
+        // Rating request
+        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getRate?productId=" + bookId, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                'Accept': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(rate => {
+                console.log(rate);
+                setRate(4.5); // localde rate
+            })
+            .catch(error => {
+                console.log("Rate -> useEffect ->catch:", error);
+                setIsLoading(false);
+                Alert("Error", "An error has occurred!");
+            })
+
+
+        // Comment request
+        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getCommentsOfProduct?productId=" + bookId, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                'Accept': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(comments => {
+                console.log(comments);
+                comments = [
+                    {
+                        userName: "Defne ÖGEL",
+                        comment: "Great",
+                        date: "24.04.2021",
+                        rate: 5,
+                        like: 15,
+                        dislike: 1
+                    },
+                    {
+                        userName: "Alp ATAKAV",
+                        comment: "Super",
+                        date: "25.04.2021",
+                        rate: 4.5,
+                        like: 10,
+                        dislike: 2
+                    }
+                ];
+                setComments(comments);
+            })
+            .catch(error => {
+                console.log("comments -> useEffect ->catch:", error);
+                setIsLoading(false);
+                Alert("Error", "An error has occurred!");
+            })
+
+    },[])
 
     function onBuyPressed() {
         //navigation.goBack();
@@ -38,6 +149,20 @@ const Detail = ({navigation}) => {
             </TouchableOpacity>
         );
     }
+
+    const _renderComments = ({item, index}) => {
+        return (
+            <View style={{width: "100%", paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: Colors.METALIC_GRAY}}>
+                <Text>Username: {item.userName}</Text>
+                <Text>Date: {item.date}</Text>
+                <Text>Comment: {item.comment}</Text>
+                <Text>Rate: {item.rate}</Text>
+                <Text>Like: {item.like}</Text>
+                <Text>Dislike: {item.dislike}</Text>
+            </View>
+        )
+    }
+
     return (
         <SafeAreaView>
             <View
@@ -66,162 +191,178 @@ const Detail = ({navigation}) => {
                     </View>
                 </View>
             </View>
-            <ScrollView
-                vertical
-                showsVerticalScrollIndicator={false}
-                style={{width: 400}}>
-                <View
-                    style={{
-                        height: 1200,
-                        elevation: 2,
-                        backgroundColor: '#FFF',
-                        marginLeft: 20,
-                        marginTop: 20,
-                        borderRadius: 15,
-                        marginBottom: 10,
-                        width: 350,
-                        alignItems: 'center',
-                    }}>
-                    <Image
-                        source={{
-                            uri:
-                                'https://images-na.ssl-images-amazon.com/images/I/51k+lXZyJ6L._SX322_BO1,204,203,200_.jpg',
-                        }}
-                        style={{
-                            width: 275,
-                            height: 400,
-                            marginLeft: 25,
-                            marginRight: 25,
-                            paddingTop: 10,
-                        }}
-                    />
-                    <View
-                        style={{
-                            flexDirection: 'column',
-                            paddingTop: 5,
-                            paddingHorizontal: 15,
-                        }}>
-                        <Text
-                            style={{
-                                fontWeight: 'bold',
-                                fontSize: 30,
-                                textAlign: 'center',
-                            }}>
-                            "A Gentleman In Moscow"
-                        </Text>
 
-                        <Text
-                            style={{
-                                fontWeight: 'bold',
-                                fontSize: 22,
-                                textAlign: 'center',
-                                marginTop: 10,
-                            }}>
-                            Amor Towles
-                        </Text>
-                        <Text
-                            style={{
-                                fontWeight: 'normal',
-                                fontSize: 18,
-                                color: 'grey',
-                                textAlign: 'center',
-                                marginTop: 10,
-                            }}>
-                            {' '}
-                            Windmill Books
-                        </Text>
-
-                        <Text
-                            style={{
-                                fontWeight: 'bold',
-                                fontSize: 22,
-                                color: '#FF8303',
-                                textAlign: 'center',
-                                marginTop: 10,
-                            }}>
-                            $148.31
-                        </Text>
-                        <Text
-                            style={{
-                                fontWeight: 'bold',
-                                fontSize: 18,
-                                color: '#FF8303',
-                                textAlign: 'left',
-                                marginTop: 10,
-                            }}>
-                            Description
-                        </Text>
-                        <Text
-                            style={{
-                                fontWeight: 'normal',
-                                fontSize: 12,
-                                color: 'grey',
-                                textAlign: 'left',
-                                marginTop: 5,
-                            }}>
-                            From the New York Times bestselling author of Rules of Civility -
-                            a transporting novel about a man who is ordered to spend the rest
-                            of his life inside a luxury hotel.
-                        </Text>
-                        <Text
-                            style={{
-                                fontWeight: 'normal',
-                                fontSize: 18,
-                                color: 'black',
-                                textAlign: 'auto',
-                                marginTop: 10,
-                            }}
-                        />
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                paddingTop: 5,
-                                paddingHorizontal: 15,
-                                justifyContent: 'space-around',
-                            }}>
-                            {renderBuyButton()}
-                            {renderCartButton()}
+                {
+                    isLoading ?
+                        <View style={{height: "90%", width: "100%", justifyContent: "center", alignItems: "center"}}>
+                            <ActivityIndicator size="large" color={Colors.DARK_MUSTARD}/>
                         </View>
-                        <Rating
-                            type="star"
-                            ratingCount={5}
-                            imageSize={30}
-                            showRating
-                            fractions={0.1}
-                            startingValue={0.0}
+                        :
+
+                        <ScrollView
+                            vertical
+                            showsVerticalScrollIndicator={false}
+                            nestedScrollEnabled={true}
+                            style={{width: 400}}>
+                         <View
                             style={{
-                                color: '#FF8303',
-                                marginTop: 10,
-                            }}
-                        />
-                        <TextInput
-                            style={{
-                                height: 42,
-                                borderWidth: 1,
-                                borderRadius: 16,
-                                marginTop: 15,
-                                paddingLeft: 16,
-                                borderColor: '#FF9C33',
-                            }}
-                            onChangeText={setUserName}
-                            placeholder="username"
-                            placeholderTextColor="#FF9C33"
-                            value={userName}
-                            keyboardType="default"
-                        />
-                        <TextInput
-                            style={styles.comments}
-                            onChangeText={setComment}
-                            placeholder="Leave a comment"
-                            placeholderTextColor="#FF9C33"
-                            value={comment}
-                            keyboardType="default"
-                            maxLength={200}
-                            textAlignVertical={'top'}
-                        />
-                    </View>
-                </View>
-            </ScrollView>
+
+                                elevation: 2,
+                                backgroundColor: '#FFF',
+                                marginLeft: 20,
+                                marginTop: 20,
+                                borderRadius: 15,
+                                marginBottom: 50,
+                                width: 350,
+                                alignItems: 'center',
+                            }}>
+                            <Image
+                                source={{
+                                    uri:bookDetail.imgUrl,
+                                }}
+                                style={{
+                                    width: 275,
+                                    height: 400,
+                                    marginLeft: 25,
+                                    marginRight: 25,
+                                    paddingTop: 10,
+                                }}
+                            />
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    paddingTop: 5,
+                                    paddingHorizontal: 15,
+                                }}>
+                                <Text
+                                    style={{
+                                        fontWeight: 'bold',
+                                        fontSize: 30,
+                                        textAlign: 'center',
+                                    }}>
+                                    {bookDetail.productName}
+                                </Text>
+
+                                <Text
+                                    style={{
+                                        fontWeight: 'bold',
+                                        fontSize: 22,
+                                        textAlign: 'center',
+                                        marginTop: 10,
+                                    }}>
+                                    {bookDetail.writer}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontWeight: 'normal',
+                                        fontSize: 18,
+                                        color: 'grey',
+                                        textAlign: 'center',
+                                        marginTop: 10,
+                                    }}>
+                                    {' '}
+                                    {bookDetail.distributor}
+                                </Text>
+
+                                <Text
+                                    style={{
+                                        fontWeight: 'bold',
+                                        fontSize: 22,
+                                        color: '#FF8303',
+                                        textAlign: 'center',
+                                        marginTop: 10,
+                                    }}>
+                                    ${bookDetail.currentPrice}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontWeight: 'bold',
+                                        fontSize: 18,
+                                        color: '#FF8303',
+                                        textAlign: 'left',
+                                        marginTop: 10,
+                                    }}>
+                                    Description
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontWeight: 'normal',
+                                        fontSize: 12,
+                                        color: 'grey',
+                                        textAlign: 'left',
+                                        marginTop: 5,
+                                    }}>
+                                    {bookDetail.description}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontWeight: 'normal',
+                                        fontSize: 18,
+                                        color: 'black',
+                                        textAlign: 'auto',
+                                        marginTop: 10,
+                                    }}
+                                />
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        paddingTop: 5,
+                                        paddingHorizontal: 15,
+                                        justifyContent: 'space-around',
+                                    }}>
+                                    {renderBuyButton()}
+                                    {renderCartButton()}
+                                </View>
+                                <Rating
+                                    type="star"
+                                    ratingCount={5}
+                                    imageSize={30}
+                                    showRating
+                                    fractions={0.1}
+                                    startingValue={rate}
+                                    style={{
+                                        color: '#FF8303',
+                                        marginTop: 10,
+                                    }}
+                                />
+                                <TextInput
+                                    style={{
+                                        height: 42,
+                                        borderWidth: 1,
+                                        borderRadius: 16,
+                                        marginTop: 15,
+                                        paddingLeft: 16,
+                                        borderColor: '#FF9C33',
+                                    }}
+                                    onChangeText={setUserName}
+                                    placeholder="username"
+                                    placeholderTextColor="#FF9C33"
+                                    value={userName}
+                                    keyboardType="default"
+                                />
+                                <TextInput
+                                    style={styles.comments}
+                                    onChangeText={setComment}
+                                    placeholder="Leave a comment"
+                                    placeholderTextColor="#FF9C33"
+                                    value={comment}
+                                    keyboardType="default"
+                                    maxLength={200}
+                                    textAlignVertical={'top'}
+                                />
+
+                                <FlatList
+                                    data={comments}
+                                    renderItem={_renderComments}
+                                    keyExtractor={(item) => Math.random().toString()} nestedScrollEnabled={true}
+                                />
+                            </View>
+
+                        </View>
+                        </ScrollView>
+                }
+
+
         </SafeAreaView>
     );
 };

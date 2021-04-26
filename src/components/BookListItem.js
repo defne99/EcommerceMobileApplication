@@ -1,6 +1,8 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image, Dimensions} from 'react-native';
 import PropTypes from "prop-types";
+
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get("window");
 
 const BookListItem = (props) => {
     const {
@@ -28,7 +30,7 @@ const BookListItem = (props) => {
                 style={[styles.image, imageStyle]}
             />
             <View
-                style={[styles.detail,detailStyle]}>
+                style={[styles.detail, detailStyle]}>
                 <Text
                     style={[styles.bookNameText, bookNameTextStyle]}>
                     {bookName}
@@ -50,26 +52,28 @@ const BookListItem = (props) => {
 
 const styles = StyleSheet.create({
     container : {
-        height: 250,
+        height: SCREEN_HEIGHT / 4,
         elevation: 2,
         backgroundColor: '#FFF',
-        marginLeft: 20,
         marginTop: 20,
         borderRadius: 15,
         marginBottom: 10,
-        width: 150,
+        width: (SCREEN_WIDTH - 20) / 2.1,
+        paddingVertical: 10,
+        marginHorizontal: 10
     },
     image: {
-        width: 100,
-        height: 150,
-        marginLeft: 25,
-        marginRight: 25,
-        paddingTop: 10,
+        width: "100%",
+        height: "60%",
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        resizeMode: "contain"
     },
     detail:{
         flexDirection: 'column',
-        paddingTop: 5,
+        paddingTop: 15,
         paddingHorizontal: 10,
+        height: "40%"
     },
     bookNameText: {
         fontWeight: 'bold',
