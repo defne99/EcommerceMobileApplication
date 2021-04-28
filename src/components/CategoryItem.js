@@ -12,9 +12,9 @@ const CategoryItem = (props) => {
         <TouchableOpacity onPress={() => {
             onPress(item.id); // basıldığında categorynin idysiyle onPress fonksiyonunu (_handleCategoryNavigate) cagirir
         }}>
-        <View style={styles.container}>
-            <Text style={styles.text}>{item.name}</Text>
-        </View>
+            <View style={styles.container}>
+                <Text style={styles.text}>{item.name}</Text>
+            </View>
         </TouchableOpacity>
     )
 }

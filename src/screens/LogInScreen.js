@@ -40,27 +40,30 @@ function LogInScreen(props) {
             Alert.alert("Warning", "Please enter your password");
             return false
         }
-
-        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/login", {
+        //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/login
+        fetch("http://localhost:8080/login", {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                //'Authorization': 'Basic ' + encode("ulaseraslan@sabanciuniv.edu" + ":" + password),
             },
             body: JSON.stringify({
                 email,
                 password
             })
         })
-        //MyFetch("/login", "POST", {email, password})
+            //MyFetch("/login", "POST", {email, password})
             //.then(response => response.json())
             .then((result) => {
                 console.log(result,"buradayım");
                 if(result.ok){
                     AsyncStorage.setItem('isLoggedIn', "true")
-                        .then(() => {
-                            //UserStore.email=this.state.email;
-                            navigation.navigate("Products")
-                        });
+                        .then(response => result.json()).then(hey => {
+                        console.log(hey);
+                        global.userid = hey;
+                        //UserStore.email=this.state.email;
+                        navigation.navigate("Products")
+                    });
                 } else {
                     if(status === 400){
                         Alert.alert("Error","Wrong e-mail or password!");

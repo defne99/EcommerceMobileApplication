@@ -4,6 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import BookListItem from "../components/BookListItem";
 import Icon from 'react-native-vector-icons/Ionicons';
 import SearchBar from "../components/SearchBar";
+import {func} from 'prop-types';
+import Colors from "../constants/Colors";
+
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get("window");
 
@@ -130,11 +133,13 @@ function ProductsScreen({navigation}) {
 
     const renderRecommendedItem =  ({item, index}) => {
         return <BookListItem
-            bookId={Math.random()}
+            bookId={item.productId}
             bookName={item.productName}
             _handleNavigate={_handleNavigate}
             authorName={item.writer}
-            price={item.initialPrice}
+            initialPrice={item.initialPrice}
+            currentPrice={item.currentPrice}
+            discount={item.discountRatio}
             uri={item.imgUrl}
             containerStyle={{width: (SCREEN_WIDTH - 20) / 2.2}}
         />
@@ -144,11 +149,13 @@ function ProductsScreen({navigation}) {
     );*/
     const renderNewComerItem= ({item, index}) => {
         return <BookListItem
-            bookId={Math.random()}
+            bookId={item.productId}
             bookName={item.productName}
             _handleNavigate={_handleNavigate}
             authorName={item.writer}
-            price={item.initialPrice}
+            initialPrice={item.initialPrice}
+            currentPrice={item.currentPrice}
+            discount={item.discountRatio}
             uri={item.imgUrl}
             containerStyle={{width: (SCREEN_WIDTH - 20) / 2.2}}
         />
@@ -170,7 +177,7 @@ function ProductsScreen({navigation}) {
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log("List of Recommended: ", json);
+                //console.log("List of Recommended: ", json);
                 setRecommendedList(json);
             }).catch((error) => {
                 console.error(error);
@@ -187,7 +194,7 @@ function ProductsScreen({navigation}) {
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log("List of New Comers: ", json);
+                //console.log("List of New Comers: ", json);
                 setNewComerList(json);
             }).catch((error) => {
                 console.error(error);
@@ -223,12 +230,18 @@ function ProductsScreen({navigation}) {
         navigation.navigate(pageName, params);
     }
 
+
     const _onSubmitSearchBar = () => {
         navigation.navigate("Search", {searchText});
     }
 
+    function onCartPressed(){
+        console.log("mertmertmertproduct");
+        navigation.navigate('CartScreen');
+    }
+
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{backgroundColor: Colors.WHITE}}>
             <View
                 style={{
                     backgroundColor: 'lightgrey',
@@ -240,6 +253,7 @@ function ProductsScreen({navigation}) {
                 <View
                     style={{
                         flexDirection: 'row',
+                        justifyContent: 'space-evenly',
                         alignItems: 'center',
                         marginTop: 10,
                         width: '100%',
@@ -254,12 +268,19 @@ function ProductsScreen({navigation}) {
 
                         </Text>
                     </View>
-                    <View style={{alignItems: 'center', right: 110}}>
+                    <View style={{alignItems: 'center', right: 30}}>
                         <Image
                             source={require('../constants/images/logo.jpg')}
                             style={{height: 50, width: 110}}
                         />
                     </View>
+
+                    <View style={{width: '50%', alignItems:'flex-end',right:50}}>
+                        <TouchableOpacity onPress={() => onCartPressed()}>
+                            <Icon name="ios-cart" style={{fontSize: 40,color:"orange"}} />
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
 
                 <SearchBar
@@ -318,12 +339,14 @@ function ProductsScreen({navigation}) {
                         </Text>
                     </View>
                 </View>
+
                 <FlatList
                     horizontal={true}
                     data={NewComerList}
                     renderItem={renderNewComerItem}
                     keyExtractor={item => item.id}
                 />
+
             </ScrollView>
         </SafeAreaView>
     );

@@ -138,29 +138,31 @@ function SubCategoriesScreen({route, navigation}) {
         }
 
         setIsLoading(true);
+        //setBooks(products);
         // localhost:8080/products/1/category
-              fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getByCategory?category=" + categoryName, {
-                    method: 'GET',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
-                          'Accept': 'application/json'
-                      },
-                }).then(response => response.json())
-                  .then(products => {
-                console.log("products->1: ",products);
-                    if(products){
-                        setBooks(products);
-                    } else {
-                        Alert.alert("Error","Couldn't fetch products!")
-                    }
+        //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getByCategory?category=
+        fetch("http://localhost:8080/product/getProductsByCategory?category=" + categoryName, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                'Accept': 'application/json'
+            },
+        }).then(response => response.json())
+            .then(products => {
+                //console.log("products->1: ",products);
+                if(products){
+                    setBooks(products);
+                } else {
+                    Alert.alert("Error","Couldn't fetch products!")
+                }
 
-                    setIsLoading(false);
-                }).catch(error => {
-                    console.log("subCategoryScreen -> useEffect ->catch:", error);
-                    setIsLoading(false);
-                    Alert("Error","An error has occurred!");
-                })
+                setIsLoading(false);
+            }).catch(error => {
+            //console.log("subCategoryScreen -> useEffect ->catch:", error);
+            setIsLoading(false);
+            Alert("Error","An error has occurred!");
+        })
 
 
     }, [])
@@ -173,7 +175,8 @@ function SubCategoriesScreen({route, navigation}) {
         //setIsLoading(true);
         if (subCategoryId === 0) { // for "All"
             navigation.setOptions({title: categoryName}); // all oldugunda title genre adi
-            fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getByCategory?category=" + categoryName, {
+            //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getByCategory?category=
+            fetch("http://localhost:8080/product/getProductsByCategory?category=" + categoryName, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -182,38 +185,7 @@ function SubCategoriesScreen({route, navigation}) {
                 },
             }).then(response => response.json())
                 .then(products => {
-            console.log("products->2: ", products);
-                if(products){
-                    setBooks(products);
-                } else {
-                    Alert.alert("Error","Couldn't fetch products!")
-                }
-
-                setIsLoading(false);
-            })
-                .catch(error => {
-                console.log("subCategoryScreen -> useEffect ->catch:", error);
-                setIsLoading(false);
-                Alert("Error","An error has occurred!");
-            })
-        } else {
-            subCategories.filter(subCategory => { // subcateg id ye gore filtreleme
-                if (subCategory.id === subCategoryId) {
-                    navigation.setOptions({title: subCategory.name});
-                }
-            })
-
-            fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProductsByGenre?genre=" + subCategoryName, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
-                    'Accept': 'application/json'
-                },
-            })
-                .then(response => response.json())
-                .then(products => {
-                    console.log("products->3: ", products);
+                    console.log("products->2: ", products);
                     if(products){
                         setBooks(products);
                     } else {
@@ -224,6 +196,37 @@ function SubCategoriesScreen({route, navigation}) {
                 })
                 .catch(error => {
                     console.log("subCategoryScreen -> useEffect ->catch:", error);
+                    setIsLoading(false);
+                    Alert("Error","An error has occurred!");
+                })
+        } else {
+            subCategories.filter(subCategory => { // subcateg id ye gore filtreleme
+                if (subCategory.id === subCategoryId) {
+                    navigation.setOptions({title: subCategory.name});
+                }
+            })
+            //"https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProductsByGenre?genre="
+            fetch("http://localhost:8080/product/getProductsByGenre?genre=" + subCategoryName, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                    'Accept': 'application/json'
+                },
+            })
+                .then(response => response.json())
+                .then(products => {
+                    //console.log("products->3: ", products);
+                    if(products){
+                        setBooks(products);
+                    } else {
+                        Alert.alert("Error","Couldn't fetch products!")
+                    }
+
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    //console.log("subCategoryScreen -> useEffect ->catch:", error);
                     setIsLoading(false);
                     Alert("Error", "An error has occurred!");
                 })
@@ -237,11 +240,13 @@ function SubCategoriesScreen({route, navigation}) {
 
     const renderItem = ({item, index}) => {
         return <BookListItem
-            bookId={Math.random()}
+            bookId={item.productId}
             bookName={item.productName}
             _handleNavigate={_handleNavigate}
             authorName={item.writer}
-            price={item.initialPrice}
+            initialPrice={item.initialPrice}
+            currentPrice={item.currentPrice}
+            discount={item.discountRatio}
             uri={item.imgUrl}
         />
     }
@@ -306,7 +311,6 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingHorizontal: 5,
         paddingVertical: 10,
-        backgroundColor: Colors.WHITE
     },
     topScrollViewStyle: {
         width: "100%",

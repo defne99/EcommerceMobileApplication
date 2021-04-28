@@ -2,7 +2,7 @@ import React from "react";
 import {TextInput, StyleSheet} from "react-native";
 import PropTypes from "prop-types"; // properties to input
 
-const Input = (props) => {
+const AddressInput = (props) => {
     const {value, setValue, placeholderText, isSecureText, keyboardType,autoCorrect,autoCapitalize} = props;
     return (
         <TextInput
@@ -24,13 +24,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         height: 48,
+        width:150,
         fontSize: 16,
         paddingLeft: 12,
-        marginBottom: 16
+        marginBottom: 16,
+        marginTop:16
     }
 })
 
-Input.propTypes = { // property types
+AddressInput.propTypes = { // property types
     placeholderText: PropTypes.string,
     value: PropTypes.string,
     setValue: PropTypes.func.isRequired,
@@ -41,7 +43,7 @@ Input.propTypes = { // property types
 
 }
 
-Input.defaultProps={
+AddressInput.defaultProps={
     placeholderText: "",
     value: "",
     isSecureText: false,
@@ -50,5 +52,4 @@ Input.defaultProps={
     keyboardType: "default"
 }
 
-export default Input;
-
+export default AddressInput;

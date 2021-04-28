@@ -21,51 +21,66 @@ const Detail = ({navigation, route}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [rate, setRate] = useState(0.0);
 
-    const bookDetailResponse = {
-        "productId": 30,
-        "productName": "Dokuza Kadar On",
-        "category": "Poetry",
-        "genre": "Turkish Poetry",
-        "year": "2017",
-        "description": "Yalnızlık paylaşılmaz Paylaşılsa yalnızlık olmaz.(Tanıtım Bülteninden)",
-        "writer": "Özdemir Asaf",
-        "distributor": "Yapı Kredi Yayınları",
-        "warrantyDaysLeft": 30,
-        "initialPrice": 10.0,
-        "currentPrice": 10.0,
-        "discountRatio": 0,
-        "initialStock": 35,
-        "currentStock": 27,
-        "imgUrl": "https://i.dr.com.tr/cache/600x600-0/originals/0000000330969-1.jpg"
-    }
+   /* const bookDetailResponse = {
+            "productId": 31,
+            "productName": "Around the World in Eighty Days",
+            "category": "Novel",
+            "genre": "Adventure",
+            "year": "2016",
+            "description": "One night Phileas Fogg bets his companions that he can travel across the world in just eighty days and the very next day sets out from the port of Dover with his servant Passeportout to achieve his aim. Passing through exotic lands and dangerous places, they seize whatever transportation is at hand - whether train or elephant - always racing against the clock.There are many alarms and surprises along the way - and a last minute setback that makes all the difference between winning and losing.",
+            "writer": "Jules Verne",
+            "distributor": "Puffin Classics",
+            "warrantyDaysLeft": 30,
+            "initialPrice": 75.0,
+            "currentPrice": 30.0,
+            "discountStart": "2021-05-08",
+            "discountEnd": "2021-06-04",
+            "discountRatio": 40,
+            "initialStock": 60,
+            "currentStock": 27,
+            "imgUrl": "https://www.booktopia.com.au/covers/500/9780141366296/0000/around-the-world-in-80-days.jpg"
+        } */
 
     useEffect(() => {
-        let {bookId} = route.params;
-        bookId = 3;
+        let bookId = route.params.params.bookId;
+        global.generalBookId = bookId;
+        /*console.log("mertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmert");
+        console.log(route);
+        console.log(route.params);
+        console.log(route.params.params);
+        console.log(route.params.params.bookId);
+        console.log(bookId);*/
+        //console.log(bookId);
+        //console.log(bookId+1);
+        //bookId = 3;
         setIsLoading(true);
-        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProduct?productId=" + bookId, {
+        //setBookDetail(bookDetailResponse);
+        //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProduct?productId=
+        fetch("http://localhost:8080/product/getProduct?productId=" + bookId, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
-                'Accept': 'application/json'
+                Accept: 'application/json'
             },
         })
             .then(response => response.json())
             .then(bookDetail => {
-                console.log(bookDetail);
-                setBookDetail(bookDetailResponse); // localde bookDetail
+                // console.log(bookDetail);
+                setBookDetail(bookDetail); // localde bookDetail
                 setIsLoading(false);
             })
             .catch(error => {
-                console.log("Detail -> useEffect ->catch:", error);
+                //  console.log("Detail -> useEffect ->catch:", error);
                 setIsLoading(false);
                 Alert("Error", "An error has occurred!");
             })
 
 
-        // Rating request
-        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getRate?productId=" + bookId, {
+        // Get Rating request
+        //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product
+        fetch("http://localhost:8080/rate/getRate?productId=" + bookId, {
+            //console.log(route.params);
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,18 +90,19 @@ const Detail = ({navigation, route}) => {
         })
             .then(response => response.json())
             .then(rate => {
-                console.log(rate);
-                setRate(4.5); // localde rate
+                //console.log(rate);
+                setRate(rate); // localde rate
             })
             .catch(error => {
-                console.log("Rate -> useEffect ->catch:", error);
+                //console.log("Rate -> useEffect ->catch:", error);
                 setIsLoading(false);
                 Alert("Error", "An error has occurred!");
             })
 
 
         // Comment request
-        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getCommentsOfProduct?productId=" + bookId, {
+        //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getCommentsOfProduct?productId=
+        fetch("http://localhost:8080/comments/getCommentsOfProduct?productId=" + bookId, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -96,29 +112,26 @@ const Detail = ({navigation, route}) => {
         })
             .then(response => response.json())
             .then(comments => {
-                console.log(comments);
+                //console.log(comments);
+                /*
                 comments = [
                     {
-                        userName: "Defne ÖGEL",
+                        id: 1,
+                        userId:2,
+                        productId: 30,
                         comment: "Great",
-                        date: "24.04.2021",
-                        rate: 5,
-                        like: 15,
-                        dislike: 1
                     },
                     {
-                        userName: "Alp ATAKAV",
+                        id: 2,
+                        userId:3,
+                        productId: 30,
                         comment: "Super",
-                        date: "25.04.2021",
-                        rate: 4.5,
-                        like: 10,
-                        dislike: 2
                     }
-                ];
+                ];*/
                 setComments(comments);
             })
             .catch(error => {
-                console.log("comments -> useEffect ->catch:", error);
+                //console.log("comments -> useEffect ->catch:", error);
                 setIsLoading(false);
                 Alert("Error", "An error has occurred!");
             })
@@ -129,7 +142,16 @@ const Detail = ({navigation, route}) => {
         //navigation.goBack();
     }
     function onCartPressed() {
-        //navigation.goBack();
+        fetch("http://localhost:8080/cart/addToCart?userId="+global.userid+"&productId="+ global.generalBookId +"&quantity=1", {
+            method: 'Post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                'Accept': 'application/json'
+            },
+        })
+            .then(response => response.json())
+
     }
     function renderBuyButton() {
         return (
@@ -152,15 +174,34 @@ const Detail = ({navigation, route}) => {
 
     const _renderComments = ({item, index}) => {
         return (
-            <View style={{width: "100%", paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: Colors.METALIC_GRAY}}>
-                <Text>Username: {item.userName}</Text>
-                <Text>Date: {item.date}</Text>
-                <Text>Comment: {item.comment}</Text>
-                <Text>Rate: {item.rate}</Text>
-                <Text>Like: {item.like}</Text>
-                <Text>Dislike: {item.dislike}</Text>
+            <View style={{width: "100%", paddingVertical: 15, borderBottomWidth: 5, borderBottomColor: Colors.METALIC_GRAY}}>
+
+                <Text>{item.comment}</Text>
             </View>
         )
+    }
+
+    const _handleSendRating = (rating) => {
+        //console.log(rating);
+        fetch("http://localhost:8080/rate/rate", {
+            //console.log(route.params);
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                Stars: rating
+            })
+        })
+            .then(response => response.json())
+            .then(defne => {
+
+            })
+            .catch(error => {
+                Alert("Error", "An error has occurred!");
+            })
     }
 
     return (
@@ -192,19 +233,19 @@ const Detail = ({navigation, route}) => {
                 </View>
             </View>
 
-                {
-                    isLoading ?
-                        <View style={{height: "90%", width: "100%", justifyContent: "center", alignItems: "center"}}>
-                            <ActivityIndicator size="large" color={Colors.DARK_MUSTARD}/>
-                        </View>
-                        :
+            {
+                isLoading ?
+                    <View style={{height: "90%", width: "100%", justifyContent: "center", alignItems: "center"}}>
+                        <ActivityIndicator size="large" color={Colors.DARK_MUSTARD}/>
+                    </View>
+                    :
 
-                        <ScrollView
-                            vertical
-                            showsVerticalScrollIndicator={false}
-                            nestedScrollEnabled={true}
-                            style={{width: 400}}>
-                         <View
+                    <ScrollView
+                        vertical
+                        showsVerticalScrollIndicator={false}
+                        nestedScrollEnabled={true}
+                        style={{width: 400}}>
+                        <View
                             style={{
 
                                 elevation: 2,
@@ -226,6 +267,18 @@ const Detail = ({navigation, route}) => {
                                     marginLeft: 25,
                                     marginRight: 25,
                                     paddingTop: 10,
+                                }}
+                            />
+                            <Rating
+                                type="star"
+                                ratingCount={5}
+                                imageSize={30}
+                                readonly
+                                fractions={1}
+                                startingValue={rate}
+                                style={{
+                                    color: '#FF8303',
+                                    marginTop: 10,
                                 }}
                             />
                             <View
@@ -272,7 +325,16 @@ const Detail = ({navigation, route}) => {
                                         textAlign: 'center',
                                         marginTop: 10,
                                     }}>
-                                    ${bookDetail.currentPrice}
+                                    {
+                                        bookDetail.discountRatio > 0 ?
+                                            <Text>
+                                                <Text style={styles.initialPriceOverLine}>${bookDetail.initialPrice}</Text>
+                                                ${bookDetail.currentPrice}
+                                            </Text>
+                                            :
+                                            "$" + bookDetail.currentPrice
+                                    }
+
                                 </Text>
                                 <Text
                                     style={{
@@ -313,19 +375,28 @@ const Detail = ({navigation, route}) => {
                                     {renderBuyButton()}
                                     {renderCartButton()}
                                 </View>
+
+                                <Text style={{
+                                    width: "100%",
+                                    height: 40,
+                                    textAlign: "center",
+                                    fontSize: 22,
+                                    color: Colors.MIDDLE_GRAY,
+                                    marginVertical: 15
+                                }}>What is your opinion?</Text>
+
                                 <Rating
                                     type="star"
                                     ratingCount={5}
                                     imageSize={30}
-                                    showRating
-                                    fractions={0.1}
-                                    startingValue={rate}
+                                    onFinishRating={_handleSendRating}
+                                    fractions={1}
+                                    startingValue={0}
                                     style={{
                                         color: '#FF8303',
-                                        marginTop: 10,
                                     }}
                                 />
-                                <TextInput
+                                {/*<TextInput
                                     style={{
                                         height: 42,
                                         borderWidth: 1,
@@ -339,7 +410,7 @@ const Detail = ({navigation, route}) => {
                                     placeholderTextColor="#FF9C33"
                                     value={userName}
                                     keyboardType="default"
-                                />
+                                /> */}
                                 <TextInput
                                     style={styles.comments}
                                     onChangeText={setComment}
@@ -349,6 +420,8 @@ const Detail = ({navigation, route}) => {
                                     keyboardType="default"
                                     maxLength={200}
                                     textAlignVertical={'top'}
+                                    numberOfLines={4}
+                                    multiline={true}
                                 />
 
                                 <FlatList
@@ -359,8 +432,8 @@ const Detail = ({navigation, route}) => {
                             </View>
 
                         </View>
-                        </ScrollView>
-                }
+                    </ScrollView>
+            }
 
 
         </SafeAreaView>
@@ -407,12 +480,17 @@ const styles = StyleSheet.create({
         color: '#faf8f8',
     },
     comments: {
-        height: 200,
-        marginTop: 15,
+        height: 100,
+        marginTop: 20,
         borderWidth: 1,
         borderColor: '#FF9C33',
         borderRadius: 20,
-        paddingTop: 20,
+        paddingTop: 10,
     },
+    initialPriceOverLine: {
+        textDecorationLine: "line-through",
+        fontSize: 16,
+        color: Colors.MIDDLE_GRAY
+    }
 });
 export default Detail;

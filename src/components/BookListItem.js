@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Image, Dimensions} from 'react-native';
 import PropTypes from "prop-types";
+import Colors from "../constants/Colors";
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get("window");
 
@@ -16,11 +17,22 @@ const BookListItem = (props) => {
         authorTextStyle,
         authorName,
         bookId,
-        price,
+        initialPrice,
+        discount,
+        currentPrice,
         priceStyle,
         navigatePage,
         currency
     } = props;
+
+    let priced = currency+initialPrice;
+    if(discount > 0){
+        priced = <Text>
+                    <Text style={styles.initialPriceOverLine}>{currency+initialPrice}</Text>
+                    {currency+currentPrice}
+                </Text>;
+    }
+
     return (
         <TouchableOpacity
             onPress={() => _handleNavigate(navigatePage, {params: {bookId}})}
@@ -43,7 +55,7 @@ const BookListItem = (props) => {
 
                 <Text
                     style={[styles.priceStyle, priceStyle]}>
-                    {currency}{price}
+                    {priced}
                 </Text>
             </View>
         </TouchableOpacity>
@@ -90,6 +102,11 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#FF8303',
         textAlign: 'center',
+    },
+    initialPriceOverLine: {
+        textDecorationLine: "line-through",
+        fontSize: 16,
+        color: Colors.MIDDLE_GRAY
     }
 })
 
@@ -107,7 +124,9 @@ BookListItem.propTypes = {
     navigatePage: PropTypes.string,
     currency: PropTypes.string,
     bookId: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
+    initialPrice: PropTypes.number.isRequired,
+    discount: PropTypes.number,
+    currentPrice: PropTypes.number.isRequired,
     priceStyle: PropTypes.object
 }
 
@@ -120,6 +139,7 @@ BookListItem.defaultProps = {
     priceStyle: {},
     navigatePage: "Detail",
     currency: "$",
+    discount: 0
 }
 
 

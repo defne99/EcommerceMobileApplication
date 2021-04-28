@@ -9,6 +9,11 @@ import SubCategoriesScreen from '../../screens/SubCategoriesScreen';
 import BooksListScreen from '../../screens/BooksListScreen';
 import Detail from '../../screens/Detail';
 import SearchScreen from "../../screens/SearchScreen";
+import ShoppingCartScreen from '../../screens/ShoppingCartScreen'
+import CartStack from './CartStack';
+import PaymentScreen from '../../screens/PaymentScreen';
+//import TryCartScreen from '../../screens/TryCartScreen';
+
 
 const Main = createStackNavigator();
 
@@ -44,10 +49,25 @@ const MainStack = ({route, navigation}) => {
             <Main.Screen name="Detail" component={Detail} />
             <Main.Screen name="Search" component={SearchScreen} />
             <Main.Screen
+                name="CartScreen"
+                component={ShoppingCartScreen}
+                options={{
+                    headerLeft: () => (
+                        <TouchableOpacity
+                            onPress={() => navigation.goBack()}
+                            style={{paddingLeft: 15}}>
+                            <Icon name="chevron-left" size={22} />
+                        </TouchableOpacity>
+                    ),
+                }}
+            />
+            <Main.Screen name="Payment" component={PaymentScreen}/>
+            <Main.Screen
                 name="Auth"
                 component={AuthStack}
                 options={{headerTitle: 'Welcome'}}
             />
+
         </Main.Navigator>
     );
 };

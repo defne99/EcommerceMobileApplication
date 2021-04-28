@@ -17,22 +17,22 @@ const SearchBar = (props) => {
     } = props;
     return (
         <View style={[styles.container, containerStyle]}>
-                <View
-                    style={[styles.content, contentStyle]}>
-                    <Icon name="ios-search" style={[styles.icon, iconStyle]} />
-                    <TextInput
-                        placeholder={placeholder}
-                        style={[styles.textInput, textInputStyle]}
-                        returnKeyType={returnKeyType}
-                        value={searchText}
-                        onChangeText={text => setSearchText(text)}
-                        onSubmitEditing={(
-                            {nativeEvent: {text, eventCount, target}}
-                            ) => {
-                            onSubmitEditing();
-                        }}
-                    />
-                </View>
+            <View
+                style={[styles.content, contentStyle]}>
+                <Icon name="ios-search" style={[styles.icon, iconStyle]} />
+                <TextInput
+                    placeholder={placeholder}
+                    style={[styles.textInput, textInputStyle]}
+                    returnKeyType={returnKeyType}
+                    value={searchText}
+                    onChangeText={text => setSearchText(text)}
+                    onSubmitEditing={(
+                        {nativeEvent: {text, eventCount, target}}
+                    ) => {
+                        onSubmitEditing();
+                    }}
+                />
+            </View>
         </View>
     )
 }
