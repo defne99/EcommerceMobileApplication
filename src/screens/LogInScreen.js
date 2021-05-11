@@ -13,13 +13,12 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthContext} from '../../App';
 import RegisterScreen from './RegisterScreen';
-import ProductScreenGeneral from './ProductScreenGeneral';
 import Input from "../components/Input";
 import Helper from "../services/Helper";
 import MyFetch from "../services/fetch";
 
 function LogInScreen(props) {
-
+    console.disableYellowBox = true;
     const {navigation} = props;
 
 
@@ -48,8 +47,9 @@ function LogInScreen(props) {
                 //'Authorization': 'Basic ' + encode("ulaseraslan@sabanciuniv.edu" + ":" + password),
             },
             body: JSON.stringify({
-                email,
-                password
+                email:email,
+                password:password,
+                where : 'M'
             })
         })
             //MyFetch("/login", "POST", {email, password})
@@ -67,8 +67,10 @@ function LogInScreen(props) {
                 } else {
                     if(status === 400){
                         Alert.alert("Error","Wrong e-mail or password!");
+
                     } else {
                         Alert.alert("Error","Something went wrong!");
+
                     }
                 }
 
@@ -86,7 +88,7 @@ function LogInScreen(props) {
         return <TouchableOpacity
             style={styles.buttonStyle_login}
             onPress={() => onLogInPressed()}>
-            <Text style={styles.logIn_register_TextStyle}>LOG IN</Text>
+            <Text style={styles.logIn_register_TextStyle}>SIGN IN</Text>
         </TouchableOpacity>
     }
 
@@ -94,7 +96,7 @@ function LogInScreen(props) {
         return <TouchableOpacity
             style={styles.buttonStyle_register}
             onPress={() => onRegisterPressed()}>
-            <Text style={styles.logIn_register_TextStyle}>REGISTER</Text>
+            <Text style={styles.logIn_register_TextStyle}>SIGN UP</Text>
         </TouchableOpacity>
     }
 

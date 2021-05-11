@@ -9,8 +9,9 @@ import Colors from "../constants/Colors";
 
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get("window");
-
+console.disableYellowBox = true;
 const RecommendedProduct = ({recommendedProduct}) => (
+
     <TouchableOpacity
         //onPress={() => navigation.navigate('Detail')}
         style={{
@@ -121,13 +122,18 @@ const NewComerProduct = ({newComerProduct}) => (
 
 function ProductsScreen({navigation}) {
 
+    if(typeof(global.userid) === "undefined"){
+        global.userid=-1;
+    }
     const [searchText, setSearchText] = useState("");
     const [recommendedList,setRecommendedList] = useState([]);
     const [NewComerList,setNewComerList] = useState([]);
+    const [HighestDiscountList,setHighestDiscountList] = useState([]);
 
     useEffect(()=>{
         getRecommendedProductsfromAPI();
         getNewComerProductsfromAPI();
+        getHighestDiscountfromAPI();
     },[]);
 
 
@@ -161,13 +167,27 @@ function ProductsScreen({navigation}) {
         />
     }
 
+    const renderHighestDiscountItem= ({item, index}) => {
+        return <BookListItem
+            bookId={item.productId}
+            bookName={item.productName}
+            _handleNavigate={_handleNavigate}
+            authorName={item.writer}
+            initialPrice={item.initialPrice}
+            currentPrice={item.currentPrice}
+            discount={item.discountRatio}
+            uri={item.imgUrl}
+            containerStyle={{width: (SCREEN_WIDTH - 20) / 2.2}}
+        />
+    }
+
     /*
      ({item}) => (
          <NewComerProduct title={item.title}/>
      );
  */
     const getRecommendedProductsfromAPI = () => {
-        return fetch('http://localhost:8080/product/getProducts',{
+        return fetch('http://localhost:8080/product/recentlyPublished',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -184,7 +204,7 @@ function ProductsScreen({navigation}) {
             });
     };
     const getNewComerProductsfromAPI = () => {
-        return fetch('http://localhost:8080/product/recentlyPublished',{
+        return fetch('http://localhost:8080/product/runningOut',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -196,6 +216,24 @@ function ProductsScreen({navigation}) {
             .then((json) => {
                 //console.log("List of New Comers: ", json);
                 setNewComerList(json);
+            }).catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const getHighestDiscountfromAPI = () => {
+        return fetch('http://localhost:8080/product/highestDiscount',{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                //console.log("List of New Comers: ", json);
+                setHighestDiscountList(json);
             }).catch((error) => {
                 console.error(error);
             });
@@ -293,22 +331,23 @@ function ProductsScreen({navigation}) {
             <ScrollView
                 vertical
                 showsVerticalScrollIndicator={false}
-                style={{height: 550}}>
+                style={{height: 680}}>
                 <View
                     style={{
                         flexDirection: 'row',
                         paddingHorizontal: 20,
                         width: '100%',
                         alignItems: 'center',
+                        top:10
                     }}>
                     <View style={{width: '50%'}}>
                         <Text
                             style={{
                                 fontWeight: 'bold',
-                                fontSize: 15,
+                                fontSize: 18,
                                 color: '#FF8303',
                             }}>
-                            Recommended
+                            Recently Published
                         </Text>
                     </View>
 
@@ -332,10 +371,11 @@ function ProductsScreen({navigation}) {
                         <Text
                             style={{
                                 fontWeight: 'bold',
-                                fontSize: 15,
+                                fontSize: 18,
                                 color: '#FF8303',
+                                top:10
                             }}>
-                            New Comers
+                            Running Out
                         </Text>
                     </View>
                 </View>
@@ -344,6 +384,33 @@ function ProductsScreen({navigation}) {
                     horizontal={true}
                     data={NewComerList}
                     renderItem={renderNewComerItem}
+                    keyExtractor={item => item.id}
+                />
+
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 20,
+                        width: '100%',
+                        alignItems: 'center',
+                    }}>
+                    <View style={{width: '50%'}}>
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                fontSize: 18,
+                                color: '#FF8303',
+                                top:10
+                            }}>
+                            Highest Discount
+                        </Text>
+                    </View>
+                </View>
+
+                <FlatList
+                    horizontal={true}
+                    data={HighestDiscountList}
+                    renderItem={renderHighestDiscountItem}
                     keyExtractor={item => item.id}
                 />
 

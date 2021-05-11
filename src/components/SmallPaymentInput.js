@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
         width:150,
         fontSize: 16,
         paddingLeft: 12,
-        marginBottom: 16
+        marginBottom: 16,
+        marginHorizontal:4
     }
 })
 

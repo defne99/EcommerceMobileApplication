@@ -3,6 +3,7 @@ import {View, Text, StyleSheet} from "react-native";
 import PropTypes from "prop-types";
 
 const BooksListScreen = (props) => {
+    console.disableYellowBox = true;
 
     return (
         <View style={styles.container}>

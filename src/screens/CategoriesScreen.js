@@ -8,7 +8,7 @@ import Categories from "../constants/Categories";
 import Helper from "../services/Helper";
 
 function CategoriesScreen({navigation}) {
-
+    console.disableYellowBox = true;
 
     const {navigate} = navigation; // navigation.navigate yapmamak icin
 

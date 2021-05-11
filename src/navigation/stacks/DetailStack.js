@@ -8,8 +8,8 @@ const DetailStack = ({route, navigation}) => {
     return (
         <Detail.Navigator
             screenOptions={{headerShown: false, headerTitle: 'Welcome'}}>
-            <Detail.Screen name="Product" component={ProductsScreen} />
-            <Detail.Screen name="Detail" component={DetailScreen} />
+            <Detail.Screen name="Product" component={ProductsScreen}options={{headerTitle: ""}} />
+            <Detail.Screen name="Detail" component={DetailScreen}options={{headerTitle: ""}} />
         </Detail.Navigator>
     );
 };

@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthContext} from '../../App';
 
 function ProductScreenGeneral({navigation}) {
+    console.disableYellowBox = true;
 
     const { GoBack } = React.useContext(AuthContext);
 

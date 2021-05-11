@@ -9,8 +9,8 @@ const AuthStack = ({route, navigation}) => {
 
     return (
         <Auth.Navigator screenOptions={{headerShown: false, headerTitle: "Welcome"}}>
-            <Auth.Screen name="Login" component={LogInScreen} />
-            <Auth.Screen name="Register" component={RegisterScreen} />
+            <Auth.Screen name="Login" component={LogInScreen}options={{headerTitle: ""}} />
+            <Auth.Screen name="Register" component={RegisterScreen}options={{headerTitle: ""}} />
         </Auth.Navigator>
     )
 

@@ -2,68 +2,56 @@ import React, {Component, useState} from 'react';
 import {
     StyleSheet,
     View,
-    Switch,
     SafeAreaView,
     TouchableOpacity,
     Text,
     ScrollView,
-    TextInput,
-    Image, Alert,
+    Alert,
 } from 'react-native';
 import PaymentInput from "../components/PaymentInput";
-import AddressInput from '../components/AddressInput';
-import Input from '../components/Input';
 import SmallPaymentInput from '../components/SmallPaymentInput';
-import OpenAddressInput from '../components/OpenAddressInput';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 function PaymentScreen(props){
+    console.disableYellowBox = true;
     const {navigation} = props;
     const [creditCardNumber, setCreditCardNumber] = useState("");
     const [creditCardType, setCreditCardType] = useState("");
     const [creditCardName, setCreditCardName] = useState("");
     const [creditCardExpirationDate, setCreditCardExpirationDate] = useState("");
     const [creditCardCVC, setCreditCardCVC] = useState("");
-    const [City, setCity] = useState("");
-    const [Country, setCountry] = useState("");
-    const [PostalCode, setPostalCode] = useState("");
-    const [AddressType, setAddressType] = useState("");
-    const [OpenAddress, setOpenAddress] = useState("");
     const [userEmail, setUserEmail] = useState("");
 
-    function renderSaveButton() {
+    function renderCheckOutButton() {
         return <TouchableOpacity
             style={styles.buttonStyleSave}
-            onPress={() => onSavePressed()}>
-            <Text style={styles.buy_TextStyle}>BUY</Text>
+            onPress={() => onCheckOutPressed()}>
+            <Text style={styles.buy_TextStyle}>CHECKOUT</Text>
         </TouchableOpacity>
     }
-    function onSavePressed() {
-        if(creditCardNumber.length !== 12){
-            Alert.alert("Warning", "Invalid Credit Card Number")
+    function onCheckOutPressed() {
+        if(creditCardNumber.length !== 16){
+            Alert.alert("Warning", "Invalid Credit Card Informationmert")
+            return false
         }
-        if(creditCardExpirationDate.length !== 5){
-            Alert.alert("Warning", "Invalid Expiration Date")
+        if(creditCardNumber === "" || creditCardType==="" || creditCardCVC==="" || creditCardExpirationDate==="" || creditCardCVC.length !== 3 || creditCardExpirationDate.length !== 5){
+            Alert.alert("Warning", "Invalid Credit Card Information")
+            return false
         }
-        if(creditCardCVC.length !== 3){
-            Alert.alert("Warning", "Invalid CVC Number")
-        }
-        if(creditCardType !== "MasterCard" ||creditCardType !== "Visa"||creditCardType !== "PayPal"||creditCardType !== "Master Card" ){
-            Alert.alert("Warning", "Invalid Card Type")
-        }
-        fetch("", {
+        Alert.alert("Transaction", "Successful Transaction");
+        //Credit Card Information Posting
+        //Email yerine nasıl userId'den email alırız
+        fetch("http://localhost:8080/creditCard/add", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                userEmail,
-                creditCardName,
-                creditCardCVC,
-                creditCardNumber,
-                creditCardType,
-                creditCardExpirationDate,
+                email:"omertabar@sabanciuniv.edu",
+                full_name:creditCardName,
+                cvv:creditCardCVC,
+                creditcard_number:creditCardNumber,
+                type:creditCardType,
+                end_date:creditCardExpirationDate,
             })
         })
             .then((result1) => {
@@ -72,35 +60,46 @@ function PaymentScreen(props){
             console.warn(error1)
             Alert.alert("Warning", "Please check your information")
         })
-        fetch("", {
-            method: 'POST',
+        /*//Get the Cart Information with the User Id
+        fetch('http://localhost:8080/cart/getCart?userId='+ global.userid,{
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 Accept: 'application/json',
             },
-            body: JSON.stringify({
-                AddressType,
-                Country,
-                City,
-                PostalCode,
-                OpenAddress,
-            })
         })
-            .then((result2) => {
-                console.log(result2)
-            }).catch(error2 => {
-            console.warn(error2)
-            Alert.alert("Warning", "Please check your information")
+            .then((response) => response.json())
+            .then((json) => {
+                console.log("List of Cart Items: ", json);
+                setTempList(json);
+            }).catch((error) => {
+            console.error(error);
+        });
+        fetch('http://localhost:8080/product//getProduct?productId='+ tempList.productId,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                Accept: 'application/json',
+            },
         })
-        fetch("http://localhost:8080/cart/buy?userId={userId}", {
+            .then((response) => response.json())
+            .then((json) => {
+                console.log("List of Cart/Product Items: ", json);
+                setTempListSecond(json);
+            }).catch((error) => {
+            console.error(error);
+        });*/
+
+        //After user Checkout cart will become empty
+        fetch("http://localhost:8080/cart/buy?userId=" + global.userid, {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 Accept: 'application/json',
             },
-
         })
             .then((result3) => {
                 console.log(result3)
@@ -108,7 +107,6 @@ function PaymentScreen(props){
             console.warn(error3)
             Alert.alert("Warning", "Please check your information")
         })
-
         navigation.navigate("Products");
     }
     return(
@@ -146,24 +144,22 @@ function PaymentScreen(props){
                     alignItems:'center'
                 }}>
                     <PaymentInput
-                        setValue={setUserEmail}
-                        placeholderText="Email Address"
-                        value={userEmail}
-                    />
-                    <PaymentInput
                         setValue={setCreditCardType}
-                        placeholderText="Credit Card Type"
+                        placeholderText="Type: MasterCard/PayPal/Visa"
                         value={creditCardType}
+                        keyboardType='default'
                     />
                     <PaymentInput
                         setValue={setCreditCardNumber}
-                        placeholderText="Credit Card Number"
+                        placeholderText="**** **** **** ****"
                         value={creditCardNumber}
+                        keyboardType='number-pad'
                     />
                     <PaymentInput
                         setValue={setCreditCardName}
                         placeholderText="Name-Surname"
                         value={creditCardName}
+                        keyboardType='default'
                     />
                     <View style={{
                         flexDirection:'row',
@@ -174,103 +170,22 @@ function PaymentScreen(props){
                     }}>
                         <SmallPaymentInput
                             setValue={setCreditCardExpirationDate}
-                            placeholderText="Expiration Date"
+                            placeholderText="MM/YY"
                             value={creditCardExpirationDate}
+                            keyboardType='default'
                         />
 
                         <SmallPaymentInput
                             setValue={setCreditCardCVC}
-                            placeholderText="CVC"
+                            placeholderText="CVV"
                             value={creditCardCVC}
+                            keyboardType='numeric's
                         />
 
                     </View>
-
-                    <View style={{
-                        backgroundColor: '#FF8303',
-                        height: 80,
-                        width:400,
-                        borderBottomRightRadius: 20,
-                        borderBottomLeftRadius: 20,
-                        borderTopLeftRadius:20,
-                        borderTopRightRadius:20,
-                        paddingHorizontal: 20,
-                    }}>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                marginTop: 20,
-                                marginBottom:20,
-                                width: '100%',
-                            }}>
-                            <View style={{width: '80%', alignItems: 'flex-start'}}>
-                                <Text style={{
-                                    fontSize:16,
-                                    fontWeight:'bold',
-                                    paddingLeft:12,
-                                    marginVertical:5,
-                                    color:"white"
-                                }}>Address Information</Text>
-                            </View>
-                        </View>
-
-
-                    </View>
-                    <View style={{
-                        flexDirection:'row',
-                        justifyContent:'space-around',
-                        marginHorizontal:10,
-                        paddingHorizontal:10
-                    }}>
-                        <AddressInput
-                            setValue={setAddressType}
-                            placeholderText="Address Type"
-                            value={AddressType}
-                        />
-                        <AddressInput
-                            setValue={setPostalCode}
-                            placeholderText="Postal Code"
-                            value={PostalCode}
-                        />
-
-                    </View>
-                    <View style={{
-                        flexDirection:'row',
-                        justifyContent:'space-around',
-                        marginHorizontal:10,
-                        paddingHorizontal:10
-                    }}>
-                        <AddressInput
-                            setValue={setCountry}
-                            placeholderText="Country"
-                            value={Country}
-                        />
-                        <AddressInput
-                            setValue={setCity}
-                            placeholderText="City"
-                            value={City}
-                        />
-
-                    </View>
-                    <OpenAddressInput
-                        setValue={setOpenAddress}
-                        placeholderText="Open Address"
-                        value={OpenAddress}
-                    />
-                    {renderSaveButton()}
-
+                    {renderCheckOutButton()}
                 </View>
-
-
-
-
             </ScrollView>
-
-
-
-
-
         </SafeAreaView>
 
     );
@@ -280,7 +195,7 @@ const styles = StyleSheet.create({
         height: 42,
         width:150,
         borderWidth: 1,
-        borderRadius: 16,
+        borderRadius: 30,
         marginTop: 10,
         justifyContent: 'center',
         flexDirection: 'column',

@@ -10,9 +10,10 @@ import BooksListScreen from '../../screens/BooksListScreen';
 import Detail from '../../screens/Detail';
 import SearchScreen from "../../screens/SearchScreen";
 import ShoppingCartScreen from '../../screens/ShoppingCartScreen'
-import CartStack from './CartStack';
 import PaymentScreen from '../../screens/PaymentScreen';
-//import TryCartScreen from '../../screens/TryCartScreen';
+import LogInScreen from '../../screens/LogInScreen';
+import AdressScreen from '../../screens/AddressScreen';
+import AddressScreen from '../../screens/AddressScreen';
 
 
 const Main = createStackNavigator();
@@ -31,6 +32,7 @@ const MainStack = ({route, navigation}) => {
                 ),
             }}>
             <Main.Screen name="Products" component={ProductsScreen} options={{headerTitle: ""}} />
+            <Main.Screen name="Login" component={LogInScreen} options={{headerTitle: ""}} />
             <Main.Screen name="Categories" component={CategoriesScreen} options={{headerTitle: ""}} />
             <Main.Screen
                 name="SubCategories"
@@ -45,13 +47,14 @@ const MainStack = ({route, navigation}) => {
                     ),
                 }}
             />
-            <Main.Screen name="BooksListScreen" component={BooksListScreen} />
-            <Main.Screen name="Detail" component={Detail} />
-            <Main.Screen name="Search" component={SearchScreen} />
+            <Main.Screen name="BooksListScreen" component={BooksListScreen} options={{headerTitle: ""}} />
+            <Main.Screen name="Detail" component={Detail} options={{headerTitle: ""}} />
+            <Main.Screen name="Search" component={SearchScreen} options={{headerTitle: ""}}/>
             <Main.Screen
                 name="CartScreen"
                 component={ShoppingCartScreen}
                 options={{
+                    headerTitle:"",
                     headerLeft: () => (
                         <TouchableOpacity
                             onPress={() => navigation.goBack()}
@@ -61,7 +64,8 @@ const MainStack = ({route, navigation}) => {
                     ),
                 }}
             />
-            <Main.Screen name="Payment" component={PaymentScreen}/>
+            <Main.Screen name="AddressScreen" component={AddressScreen}options={{headerTitle: ""}}/>
+            <Main.Screen name="PaymentScreen" component={PaymentScreen}options={{headerTitle: ""}}/>
             <Main.Screen
                 name="Auth"
                 component={AuthStack}

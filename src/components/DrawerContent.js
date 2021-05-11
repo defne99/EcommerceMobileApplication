@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import Colors from "../constants/Colors";
 import DrawerContentItem from "./DrawerContentItem";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 const DrawerContent = ({route, navigation}) => {
@@ -24,38 +25,88 @@ const DrawerContent = ({route, navigation}) => {
         navigation.navigate(nestedName, {screen: pageName});
     }
 
+    if(global.userid === -1){
+        return (
+            <SafeAreaView style={styles.container}>
 
-    return (
-        <SafeAreaView style={styles.container}>
+                <View style={styles.topContainer}>
 
-            <View style={styles.topContainer}>
-
-            </View>
-            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-                <DrawerContentItem icon="home" menuTitle="Main Page" onPress={() => {
-                    _handleDrawerNavigate("Products")
-                }} iconSize={19}/>
-                <DrawerContentItem icon="list" menuTitle="Categories" onPress={() => {
-                    _handleDrawerNavigate("Categories")
-                }} iconSize={19}/>
-
-            </ScrollView>
-
-            <View style={styles.bottomContainer}>
-                <View style={[styles.bottomSubContainer,{paddingLeft: 20}]}>
-                    <DrawerContentItem icon="sign-in-alt" menuTitle="Login" onPress={() => {
-                        _handleDrawerNestedNavigate("Auth", "Login")
-                    }} iconSize={19}/>
                 </View>
-                <View style={styles.bottomSubContainer}>
-                    <DrawerContentItem icon="edit" menuTitle="Register" onPress={() => {
-                        _handleDrawerNestedNavigate("Auth", "Register")
+                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                    <DrawerContentItem icon="home" menuTitle="Main Page" onPress={() => {
+                        _handleDrawerNavigate("Products")
                     }} iconSize={19}/>
-                </View>
-            </View>
+                    <DrawerContentItem icon="list" menuTitle="Categories" onPress={() => {
+                        _handleDrawerNavigate("Categories")
+                    }} iconSize={19}/>
 
-        </SafeAreaView>
-    );
+                </ScrollView>
+
+                <View style={styles.bottomContainer}>
+                    <View style={[styles.bottomSubContainer,{paddingLeft: 20}]}>
+                        <DrawerContentItem icon="sign-in-alt" menuTitle="Sign In" onPress={() => {
+                            _handleDrawerNestedNavigate("Auth", "Login")
+                        }} iconSize={19}/>
+                    </View>
+                    <View style={styles.bottomSubContainer}>
+                        <DrawerContentItem icon="edit" menuTitle="Sign Up" onPress={() => {
+                            _handleDrawerNestedNavigate("Auth", "Register")
+                        }} iconSize={19}/>
+                    </View>
+                </View>
+
+            </SafeAreaView>
+        );
+    }
+    else{
+        return (
+            <SafeAreaView style={styles.container}>
+
+                <View style={styles.topContainer}>
+                    <View style={{
+                        flexDirection:'row',
+                    }}>
+                        <View style={{
+                            flexDirection:'column',
+                        }}>
+                            <Icon name="ios-person"
+                                  style={{
+                                      fontSize:70,
+                                      paddingLeft:5,
+                                      top:40,
+
+                                  }} />
+                        </View>
+
+                    </View>
+
+
+                </View>
+                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                    <DrawerContentItem icon="home" menuTitle="Main Page" onPress={() => {
+                        _handleDrawerNavigate("Products")
+                    }} iconSize={19}/>
+                    <DrawerContentItem icon="list" menuTitle="Categories" onPress={() => {
+                        _handleDrawerNavigate("Categories")
+                    }} iconSize={19}/>
+                </ScrollView>
+
+                <View style={styles.bottomContainer}>
+                    <View style={[styles.bottomSubContainer,{paddingLeft: 20}]}>
+                        <DrawerContentItem icon="sign-out-alt" menuTitle="Sign Out" onPress={() => {
+                            global.userid=-1;
+                            _handleDrawerNavigate("Products")
+                        }} iconSize={19}/>
+                    </View>
+                </View>
+
+            </SafeAreaView>
+        );
+
+    }
+
+
+
 };
 
 const styles = StyleSheet.create({

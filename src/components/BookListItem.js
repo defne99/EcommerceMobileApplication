@@ -28,9 +28,9 @@ const BookListItem = (props) => {
     let priced = currency+initialPrice;
     if(discount > 0){
         priced = <Text>
-                    <Text style={styles.initialPriceOverLine}>{currency+initialPrice}</Text>
-                    {currency+currentPrice}
-                </Text>;
+            <Text style={styles.initialPriceOverLine}>{currency+initialPrice}</Text>
+            {currency+currentPrice}
+        </Text>;
     }
 
     return (

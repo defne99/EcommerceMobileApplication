@@ -13,7 +13,7 @@ import Input from '../components/Input';
 import Images from "../constants/Images";
 
 function RegisterScreen({navigation}) {
-
+    console.disableYellowBox = true;
 
     const [nameSurname, setNameSurname] = useState("")
     const [password, setPassword] = useState("")
@@ -53,28 +53,22 @@ function RegisterScreen({navigation}) {
         }
 
 
-        fetch("https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/register/addUser", {
+        fetch("http://localhost:8080/register/addUser", {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
-                nameSurname,
-                email,
-                password,
-                passwordSecond,
+                name :nameSurname,
+                email:email,
+                password:password,
             })
-        })
-            .then((result) => {
-                console.log(result)
-                /*AsyncStorage.setItem('isLoggedIn', result)
-                    .then(() => {
-                        logIn();
-                    });*/
-            }).catch(error => {
-            console.warn(error)
-            Alert.alert("Warning", "Please check your information")
-        })
+        }).then(response => response.json())
+            .catch(error => {
+                Alert("Error", "An error has occurred!");
+            })
 
         navigation.goBack();
     }
@@ -87,7 +81,7 @@ function RegisterScreen({navigation}) {
         return <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => onSavePressed()}>
-            <Text style={styles.saveTextStyle}> SAVE </Text>
+            <Text style={styles.saveTextStyle}> SIGN UP </Text>
         </TouchableOpacity>
     }
 

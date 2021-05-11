@@ -2,7 +2,7 @@ import React from 'react';
 import {SafeAreaView, Text, View, ActivityIndicator, StyleSheet} from 'react-native';
 
 function SplashScreen() {
-
+    console.disableYellowBox = true;
     return <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>
 

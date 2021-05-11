@@ -18,7 +18,7 @@ import FilterSubCategoryItem from "../components/FilterSubCategoryItem";
 import BookListItem from "../components/BookListItem";
 
 function SubCategoriesScreen({route, navigation}) {
-
+    console.disableYellowBox = true;
 
     /*const products = [
         {
