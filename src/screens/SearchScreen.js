@@ -28,20 +28,12 @@ const SearchScreen = ({navigation, route}) => {
     const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
     const [isSortModalVisible, setIsSortModalVisible] = useState(false);
     const [subFilterCategories, setSubFilterCategories] = useState([]);
+    const [customFilterMinValue, setCustomFilterMinValue] = useState(null);
+    const [customFilterMaxValue, setCustomFilterMaxValue] = useState(null);
     const paginationScrollView = useRef();
     const filterCategories = [
         {
             id: 1,
-            name: 'Author',
-            filters: [
-                {
-                    filterId: 1,
-                    value: "Defne",
-                }
-            ]
-        },
-        {
-            id: 2,
             name: 'Price',
             filters: [
                 {
@@ -82,35 +74,34 @@ const SearchScreen = ({navigation, route}) => {
                 }
             ]
         },
-        {
-            id: 3,
-            name: 'Publisher',
-            filters: [
-                {
-                    filterId: 30,
-                    value: "Kaan",
-                }
-            ]
-        }
     ];
 
 
     const sortCategories = [
         {
             id: 1,
-            value: 'Fiyata göre artan'
+            value: 'Price: Low to High',
+            sortPattern: "Lowest"
         },
         {
             id: 2,
-            value: 'Fiyata göre azalan'
+            value: 'Price: High to Low',
+            sortPattern: "Highest"
         },
         {
             id: 3,
-            value: 'A-Z'
+            value: 'Most Popular',
+            sortPattern: "Most Popular"
         },
         {
             id: 4,
-            value: 'Z-A'
+            value: 'A-Z',
+            sortPattern: "A-Z"
+        },
+        {
+            id: 5,
+            value: 'Z-A',
+            sortPattern: "Z-A"
         }
     ];
 
@@ -129,7 +120,7 @@ const SearchScreen = ({navigation, route}) => {
             "currentPrice": 10.0,
             "discountRatio": 0,
             "initialStock": 35,
-            "currentStock": 27,
+            "currentStock": 9,
             "imgUrl": "https://i.dr.com.tr/cache/600x600-0/originals/0000000330969-1.jpg"
         }
         ,
@@ -169,8 +160,8 @@ const SearchScreen = ({navigation, route}) => {
         console.log(searchText);
         console.log("mertmertmert");
         setIsLoading(true);
-        setProducts(dummyProducts);
-        setFilteredProducts(dummyProducts);
+        setProducts(dummyProducts); // kapa
+        setFilteredProducts(dummyProducts);  // kapa
         //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProductsBySearch?search=
         fetch("http://localhost:8080/product/getProductsBySearch?search=" + searchText, {
             method: 'GET',
@@ -185,6 +176,7 @@ const SearchScreen = ({navigation, route}) => {
             .then(searchResults => {
                 //console.log(searchResults);
                 setProducts(searchResults); // searchResults
+                setFilteredProducts(searchResults);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -194,6 +186,26 @@ const SearchScreen = ({navigation, route}) => {
             })
 
     }, [])
+
+    const sortList = (selectSort) => {
+        let sortedProducts = filteredProducts.sort((a, b) => {
+            if (selectSort === "Lowest") {
+                return parseFloat(a.currentPrice) - parseFloat(b.currentPrice)
+            } else if (selectSort === "Highest") {
+                return parseFloat(b.currentPrice) - parseFloat(a.currentPrice)
+            } else if (selectSort === "Most Popular") {
+                return parseInt(a.currentStock) - parseInt(b.currentStock)
+            } else if (selectSort === "Least Popular") {
+                return parseInt(b.currentStock) - parseInt(a.currentStock)
+            } else if (selectSort === "A-Z") {
+                return a.productName.localeCompare(b.productName)
+            } else if (selectSort === "Z-A") {
+                return b.productName.localeCompare(a.productName)
+            }
+        })
+
+        setFilteredProducts([...sortedProducts]);
+    }
 
     const _handleNavigate = (pageName, params) => {
         navigation.navigate(pageName, params);
@@ -208,6 +220,7 @@ const SearchScreen = ({navigation, route}) => {
             initialPrice={item.initialPrice}
             currentPrice={item.currentPrice}
             discount={item.discountRatio}
+            currentStock={item.currentStock}
             uri={item.imgUrl}
         />
     }
@@ -222,7 +235,7 @@ const SearchScreen = ({navigation, route}) => {
 
     useEffect(() => {
 
-    },[filterCategories])
+    }, [filterCategories])
 
     const renderFilterItem = ({item}) => {
         return (
@@ -230,7 +243,7 @@ const SearchScreen = ({navigation, route}) => {
                 onPress={() => {
 
                     let filteredCategories = filterCategories.filter((filterCategory) => {
-                        if(filterCategory.id === item.id){
+                        if (filterCategory.id === item.id) {
                             return filterCategory;
                         }
                     })
@@ -274,7 +287,8 @@ const SearchScreen = ({navigation, route}) => {
         return (
             <TouchableOpacity
                 onPress={() => {
-
+                    sortList(item.sortPattern);
+                    toggleSortModal();
                 }}
                 style={styles.renderFilterTouchableStyle}
             >
@@ -292,11 +306,11 @@ const SearchScreen = ({navigation, route}) => {
         <View style={styles.container}>
             <View style={styles.filter}>
                 <TouchableOpacity onPress={toggleFilterModal} style={styles.filterItem}>
-                    <Icon name="filter" color={Colors.LIGHT_ORANGE} size={24}/>
+                    <Icon name="filter" color={'#ff9a03'} size={24}/>
                     <Text style={styles.filterTextStyle}>Filter</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={toggleSortModal} style={styles.filterItem}>
-                    <Icon name="sort" color={Colors.LIGHT_ORANGE} size={24}/>
+                    <Icon name="sort" color={'#ff9a03'} size={24}/>
                     <Text style={styles.filterTextStyle}>Sort</Text>
                 </TouchableOpacity>
             </View>
@@ -333,11 +347,55 @@ const SearchScreen = ({navigation, route}) => {
                         />
                     </View>
                     <View style={styles.paginationPage}>
+
                         <FlatList
                             data={subFilterCategories}
                             renderItem={renderSubFilterItem}
                             keyExtractor={(item, index) => Math.random().toString()}
+                            style={{maxHeight: '65%'}}
                         />
+                        <View style={styles.filterCustomInputContainer}>
+                            <TextInput
+                                style={styles.filterCustomInput}
+                                value={customFilterMinValue}
+                                onChangeText={text => setCustomFilterMinValue(text)}
+                                keyboardType="numeric"
+                                placeholder="Min"
+                            />
+
+                            <View style={styles.gap}/>
+
+                            <TextInput
+                                style={styles.filterCustomInput}
+                                value={customFilterMaxValue}
+                                onChangeText={text => setCustomFilterMaxValue(text)}
+                                keyboardType="numeric"
+                                placeholder="Max"
+                            />
+                        </View>
+                        <View style={{width: '100%', paddingHorizontal: 10, justifyContent: 'center'}}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    let filteredProductsResult = products.filter((product) => {
+                                        return product.currentPrice >= parseFloat(customFilterMinValue) && product.currentPrice <= parseFloat(customFilterMaxValue);
+                                    });
+                                    setFilteredProducts(filteredProductsResult);
+                                    setCustomFilterMinValue(null);
+                                    setCustomFilterMaxValue(null);
+                                    toggleFilterModal();
+                                }}
+                                style={{
+                                    width: '100%',
+                                    height: 45,
+                                    borderRadius: 5,
+                                    alignItems: 'center',
+                                    backgroundColor: '#ff9a03',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Text style={{color: Colors.WHITE, fontSize: 22}}>Apply</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </ScrollView>
             </HOCModal>
@@ -359,7 +417,6 @@ const SearchScreen = ({navigation, route}) => {
                     </View>
                 </ScrollView>
             </HOCModal>
-
 
 
         </View>
@@ -396,9 +453,7 @@ const styles = StyleSheet.create({
         fontSize: 22,
         marginLeft: 5
     },
-    paginationContainer: {
-
-    },
+    paginationContainer: {},
     paginationPage: {
         width: SCREEN_WIDTH,
     },
@@ -409,7 +464,7 @@ const styles = StyleSheet.create({
         shadowColor: Colors.DARK_GRAY,
         shadowOffset: {
             width: 0,
-            height: 1
+            height: 0.5
         },
         shadowOpacity: 0.2,
         elevation: 5,
@@ -418,6 +473,28 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 11
+    },
+    filterCustomInputContainer: {
+        width: "100%",
+        paddingHorizontal: 10,
+        paddingVertical: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    filterCustomInput: {
+        width: '45%',
+        height: 50,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: Colors.LIGHT_1_GRAY,
+        padding: 10,
+    },
+    gap: {
+        width: 15,
+        height: 2,
+        backgroundColor: Colors.LIGHT_1_GRAY,
+        borderRadius: 1
     }
 })
 

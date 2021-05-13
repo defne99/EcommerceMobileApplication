@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Image, Dimensions} from 'react-native';
 import PropTypes from "prop-types";
 import Colors from "../constants/Colors";
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get("window");
 
@@ -22,14 +23,16 @@ const BookListItem = (props) => {
         currentPrice,
         priceStyle,
         navigatePage,
-        currency
+        currency,
+        currentStock,
+        warningTextStyle
     } = props;
 
-    let priced = currency+initialPrice;
-    if(discount > 0){
+    let priced = currency + initialPrice;
+    if (discount > 0) {
         priced = <Text>
-            <Text style={styles.initialPriceOverLine}>{currency+initialPrice}</Text>
-            {currency+currentPrice}
+            <Text style={styles.initialPriceOverLine}>{currency + initialPrice}</Text>
+            {currency + currentPrice}
         </Text>;
     }
 
@@ -49,7 +52,7 @@ const BookListItem = (props) => {
                 </Text>
 
                 <Text
-                    style={[styles.authorText,authorTextStyle]}>
+                    style={[styles.authorText, authorTextStyle]}>
                     {authorName}
                 </Text>
 
@@ -58,12 +61,25 @@ const BookListItem = (props) => {
                     {priced}
                 </Text>
             </View>
+
+            {
+                currentStock <= 10 ?
+                    <View style={styles.warningContainer}>
+                        <Icon name="fire" size={11} color={'#ff6803'}/>
+                        <Text
+                            style={[styles.warningText, warningTextStyle]}>
+                            Running out
+                        </Text>
+                    </View>
+                    :
+                    null
+            }
         </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
-    container : {
+    container: {
         height: SCREEN_HEIGHT / 4,
         elevation: 2,
         backgroundColor: '#FFF',
@@ -81,11 +97,27 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         resizeMode: "contain"
     },
-    detail:{
+    detail: {
         flexDirection: 'column',
-        paddingTop: 15,
+        paddingTop: 10,
         paddingHorizontal: 10,
         height: "40%"
+    },
+    warningContainer: {
+        marginBottom: 3,
+        position: 'absolute',
+        bottom: 0,
+        right: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    warningText: {
+        fontWeight: 'bold',
+        fontSize: 11,
+        textAlign: 'center',
+        color: '#ff6803',
+        marginLeft: 2
     },
     bookNameText: {
         fontWeight: 'bold',
@@ -97,16 +129,16 @@ const styles = StyleSheet.create({
         fontSize: 10,
         textAlign: 'center',
     },
-    priceStyle:{
+    priceStyle: {
         fontWeight: 'bold',
         fontSize: 20,
-        color: '#FF8303',
+        color: '#ff9a03',
         textAlign: 'center',
     },
     initialPriceOverLine: {
         textDecorationLine: "line-through",
         fontSize: 16,
-        color: Colors.MIDDLE_GRAY
+        color: '#353232'
     }
 })
 
@@ -127,6 +159,7 @@ BookListItem.propTypes = {
     initialPrice: PropTypes.number.isRequired,
     discount: PropTypes.number,
     currentPrice: PropTypes.number.isRequired,
+    currentStock: PropTypes.number,
     priceStyle: PropTypes.object
 }
 
