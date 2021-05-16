@@ -7,12 +7,10 @@ import {
     Alert,
     ActivityIndicator,
     FlatList,
-    Modal,
     TouchableOpacity,
     ScrollView,
     Dimensions
 } from 'react-native';
-import PropTypes from "prop-types";
 import BookListItem from "../components/BookListItem";
 import Colors from "../constants/Colors";
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -140,7 +138,7 @@ const SearchScreen = ({navigation, route}) => {
             "discountEnd": "2021-06-04",
             "discountRatio": 40,
             "initialStock": 60,
-            "currentStock": 27,
+            "currentStock": 0,
             "imgUrl": "https://www.booktopia.com.au/covers/500/9780141366296/0000/around-the-world-in-80-days.jpg"
         }
     ];

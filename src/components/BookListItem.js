@@ -63,12 +63,24 @@ const BookListItem = (props) => {
             </View>
 
             {
-                currentStock <= 10 ?
+                currentStock <= 10 && currentStock >= 1  ?
                     <View style={styles.warningContainer}>
                         <Icon name="fire" size={11} color={'#ff6803'}/>
                         <Text
                             style={[styles.warningText, warningTextStyle]}>
                             Running out
+                        </Text>
+                    </View>
+                    :
+                    null
+            }
+            {
+                currentStock === 0 ?
+                    <View style={styles.warningContainer}>
+                        <Icon name="" size={11} color={'#ff6803'}/>
+                        <Text
+                            style={[styles.warningText, warningTextStyle]}>
+                            Sold Out
                         </Text>
                     </View>
                     :
