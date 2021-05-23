@@ -1,6 +1,7 @@
 import React from "react";
 import {TextInput, StyleSheet} from "react-native";
-import PropTypes from "prop-types"; // properties to input
+import PropTypes from "prop-types";
+import Colors from '../constants/Colors'; // properties to input
 
 const OpenAddressInput = (props) => {
     const {value, setValue, placeholderText, isSecureText, keyboardType,autoCorrect,autoCapitalize} = props;
@@ -23,15 +24,13 @@ const styles = StyleSheet.create({
     defaultTextInputStyle: {
         borderWidth: 1,
         borderRadius: 8,
-        height: 150,
-        width:350,
+        height: 100,
+        width:330,
         fontSize: 16,
-        left:20,
+        left:30,
         paddingLeft: 30,
-        paddingTop:5,
-        marginTop:20,
-        textAlign:'left'
-
+        alignItems:'flex-start',
+        borderColor:Colors.METALIC_GRAY
     }
 })
 

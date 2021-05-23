@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
     StyleSheet,
     View,
@@ -6,20 +6,39 @@ import {
     TouchableOpacity,
     Text,
     ScrollView,
-    Alert,
+    Alert, FlatList, Dimensions,
 } from 'react-native';
 import PaymentInput from "../components/PaymentInput";
 import SmallPaymentInput from '../components/SmallPaymentInput';
-
-function PaymentScreen(props){
+import SavedCardListItem from '../components/SavedCardListItem';
+import Colors from '../constants/Colors';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get("window");
+function PaymentScreen({navigation, route}){
     console.disableYellowBox = true;
-    const {navigation} = props;
+
     const [creditCardNumber, setCreditCardNumber] = useState("");
     const [creditCardType, setCreditCardType] = useState("");
     const [creditCardName, setCreditCardName] = useState("");
     const [creditCardExpirationDate, setCreditCardExpirationDate] = useState("");
     const [creditCardCVC, setCreditCardCVC] = useState("");
-    const [userEmail, setUserEmail] = useState("");
+    const [cardList,setCardList] = useState([]);
+    const [cartList, setCartList] = useState([]);
+    useEffect(()=>{
+        global.currentAddressId = route.params.params.addressId;
+        console.log(currentAddressId);
+        getSavedCardInformationFromAPI();
+
+    },[]);
+    const renderSavedCardInformation =  ({item, index}) => {
+        return <SavedCardListItem
+            cardType={item.type}
+            creditCardNumber={item.creditcard_number}
+            Name={item.full_name}
+            _handleNavigate={_handleNavigate}
+            expire_Date={item.end_date}
+            containerStyle={{width: (SCREEN_WIDTH - 20) / 2.2}}
+        />
+    }
 
     function renderCheckOutButton() {
         return <TouchableOpacity
@@ -28,120 +47,194 @@ function PaymentScreen(props){
             <Text style={styles.buy_TextStyle}>CHECKOUT</Text>
         </TouchableOpacity>
     }
+    const BuyAllItemInTheCart = () => {
+        return fetch("http://10.0.2.2:8080/cart/buy?userId=" + global.userid + "&addressId=" + global.currentAddressId, {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log("List of Cart Items will be empty: ", json);
+                setCartList(json);
+                navigation.navigate("Products");
+            }).catch((error) => {
+                console.error(error);
+            });
+        Alert.alert("Transaction", "Successful Transaction");
+        navigation.navigate("Products");
+    };
+    ///////////////////////////////////////////////
+    const getSavedCardInformationFromAPI = () => {
+        return fetch('http://10.0.2.2:8080/creditCard/getByEmail',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({
+                email:global.mail,
+            })
+        })
+            .then((response) => response.json())
+            .then(list => {
+                console.log("List of Card List: ", list);
+                setCardList(list);
+            }).catch((error) => {
+                console.error(error);
+            });
+    };
+    /////////////////////////////////////////////////////
     function onCheckOutPressed() {
         if(creditCardNumber.length !== 16){
-            Alert.alert("Warning", "Invalid Credit Card Informationmert")
+            Alert.alert("Warning", "Invalid Credit Card Information 1")
             return false
         }
-        if(creditCardNumber === "" || creditCardType==="" || creditCardCVC==="" || creditCardExpirationDate==="" || creditCardCVC.length !== 3 || creditCardExpirationDate.length !== 5){
-            Alert.alert("Warning", "Invalid Credit Card Information")
+        if(creditCardNumber === "" || creditCardType==="" || creditCardCVC==="" || creditCardExpirationDate==="" || creditCardCVC.length !== 3){
+            Alert.alert("Warning", "Invalid Credit Card Information 2")
             return false
         }
-        Alert.alert("Transaction", "Successful Transaction");
-        //Credit Card Information Posting
-        //Email yerine nasıl userId'den email alırız
-        fetch("http://localhost:8080/creditCard/add", {
+        console.log("Girmeden Önce");
+        fetch("http://10.0.2.2:8080/creditCard/add", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email:"omertabar@sabanciuniv.edu",
+                email:global.mail,
                 full_name:creditCardName,
                 cvv:creditCardCVC,
                 creditcard_number:creditCardNumber,
                 type:creditCardType,
-                end_date:creditCardExpirationDate,
+                end_date:creditCardExpirationDate
+
             })
         })
             .then((result1) => {
-                console.log(result1)
-            }).catch(error1 => {
-            console.warn(error1)
-            Alert.alert("Warning", "Please check your information")
-        })
-        /*//Get the Cart Information with the User Id
-        fetch('http://localhost:8080/cart/getCart?userId='+ global.userid,{
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
-                Accept: 'application/json',
-            },
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log("List of Cart Items: ", json);
-                setTempList(json);
-            }).catch((error) => {
-            console.error(error);
-        });
-        fetch('http://localhost:8080/product//getProduct?productId='+ tempList.productId,{
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
-                Accept: 'application/json',
-            },
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log("List of Cart/Product Items: ", json);
-                setTempListSecond(json);
-            }).catch((error) => {
-            console.error(error);
-        });*/
+                if (result1.status===200) {
+                    BuyAllItemInTheCart();
+                }
+                else {
+                    if (result1.status === 400) {
+                        alert("Wrong email!");
+                    }
+                    else {
+                        alert("Something went wrong!");
+                    }
+                }
 
-        //After user Checkout cart will become empty
-        fetch("http://localhost:8080/cart/buy?userId=" + global.userid, {
+            })
+
+
+        /*fetch("http://10.0.2.2:8080/creditCard/buy?userId=" + global.userid + "&addressId=" + global.currentAddressId, {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 Accept: 'application/json',
             },
         })
-            .then((result3) => {
-                console.log(result3)
-            }).catch(error3 => {
-            console.warn(error3)
-            Alert.alert("Warning", "Please check your information")
-        })
-        navigation.navigate("Products");
+            .then((response) => response.json())
+            .then((json) => {
+                console.log(json);
+                console.log("List of Cart Items will be empty: ", json);
+                setCartList(json);
+            }).catch((error) => {
+            console.error(error);
+        });*/
+        Alert.alert("Transaction", "Successful Transaction");
+        //navigation.navigate("Products");
+
+        //After user Checkout cart will become empty since we bought
+
+    }
+    const _handleNavigate = (pageName, params) => {
+        navigation.navigate(pageName, params);
+        BuyAllItemInTheCart();
     }
     return(
-        <SafeAreaView>
-            <ScrollView
-                vertical
-                showsVerticalScrollIndicator={false}
-                style={{height: 665}}>
-                <View style={{
-                    backgroundColor: '#FF8303',
-                    height: 80,
+        <SafeAreaView style={{backgroundColor: Colors.WHITE}}>
+            <View
+                style={{
+                    backgroundColor: Colors.DARK_MUSTARD,
+                    height: 60,
                     borderBottomRightRadius: 20,
                     borderBottomLeftRadius: 20,
                     paddingHorizontal: 20,
                 }}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            marginTop: 20,
-                            width: '100%',
-                        }}>
-                        <View style={{width: '80%', alignItems: 'flex-start'}}>
-                            <Text style={{
-                                fontSize:16,
-                                fontWeight:'bold',
-                                paddingLeft:12,
-                                marginVertical:5,
-                                color:"white"
-                            }}>Credit Card Information</Text>
-                        </View>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        marginTop: 10,
+                        width: '100%',
+                    }}>
+                    <View style={{width: '65%'}}>
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                color: '#FFF',
+                                fontWeight: 'bold',
+                            }}>Payment Information </Text>
+                    </View>
+                </View>
+
+            </View>
+            <ScrollView
+                vertical
+                showsVerticalScrollIndicator={false}
+                style={{height: 680}}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 20,
+                        width: '100%',
+                        alignItems: 'center',
+                        top:10
+                    }}>
+                    <View style={{width: '50%'}}>
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                fontSize: 18,
+                                color: Colors.DARK_MUSTARD,
+                            }}>
+                            Saved Credit Cards
+                        </Text>
+                    </View>
+
+                </View>
+
+                <FlatList
+                    horizontal={true}
+                    data={cardList}
+                    renderItem={renderSavedCardInformation}
+                    keyExtractor={item => item.id}
+                />
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 20,
+                        width: '100%',
+                        alignItems: 'center',
+                    }}>
+                    <View style={{width: '50%'}}>
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                fontSize: 18,
+                                color: Colors.DARK_MUSTARD,
+                                top:10
+                            }}>
+                            Add New Credit Card
+                        </Text>
                     </View>
                 </View>
                 <View style={{
-                    alignItems:'center'
+                    alignItems:'center',
+
                 }}>
                     <PaymentInput
                         setValue={setCreditCardType}
@@ -179,7 +272,7 @@ function PaymentScreen(props){
                             setValue={setCreditCardCVC}
                             placeholderText="CVV"
                             value={creditCardCVC}
-                            keyboardType='numeric's
+                            keyboardType='numeric'
                         />
 
                     </View>
@@ -199,8 +292,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
         justifyContent: 'center',
         flexDirection: 'column',
-        backgroundColor: '#FF8303',
-        borderColor: '#FF8303'
+        backgroundColor: Colors.DARK_MUSTARD,
+        borderColor: Colors.METALIC_GRAY
     },
     defaultTextInputStyle: {
         height: 42,

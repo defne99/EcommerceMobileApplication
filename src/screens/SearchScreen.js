@@ -103,45 +103,45 @@ const SearchScreen = ({navigation, route}) => {
         }
     ];
 
-    const dummyProducts = [
-        {
-            "productId": 30,
-            "productName": "Dokuza Kadar On",
-            "category": "Poetry",
-            "genre": "Turkish Poetry",
-            "year": "2017",
-            "description": "Yalnızlık paylaşılmaz Paylaşılsa yalnızlık olmaz.(Tanıtım Bülteninden)",
-            "writer": "Özdemir Asaf",
-            "distributor": "Yapı Kredi Yayınları",
-            "warrantyDaysLeft": 30,
-            "initialPrice": 10.0,
-            "currentPrice": 10.0,
-            "discountRatio": 0,
-            "initialStock": 35,
-            "currentStock": 9,
-            "imgUrl": "https://i.dr.com.tr/cache/600x600-0/originals/0000000330969-1.jpg"
-        }
-        ,
-        {
-            "productId": 31,
-            "productName": "Around the World in Eighty Days",
-            "category": "Novel",
-            "genre": "Adventure",
-            "year": "2016",
-            "description": "One night Phileas Fogg bets his companions that he can travel across the world in just eighty days and the very next day sets out from the port of Dover with his servant Passeportout to achieve his aim. Passing through exotic lands and dangerous places, they seize whatever transportation is at hand - whether train or elephant - always racing against the clock.There are many alarms and surprises along the way - and a last minute setback that makes all the difference between winning and losing.",
-            "writer": "Jules Verne",
-            "distributor": "Puffin Classics",
-            "warrantyDaysLeft": 30,
-            "initialPrice": 75.0,
-            "currentPrice": 30.0,
-            "discountStart": "2021-05-08",
-            "discountEnd": "2021-06-04",
-            "discountRatio": 40,
-            "initialStock": 60,
-            "currentStock": 0,
-            "imgUrl": "https://www.booktopia.com.au/covers/500/9780141366296/0000/around-the-world-in-80-days.jpg"
-        }
-    ];
+    /* const dummyProducts = [
+         {
+             "productId": 30,
+             "productName": "Dokuza Kadar On",
+             "category": "Poetry",
+             "genre": "Turkish Poetry",
+             "year": "2017",
+             "description": "Yalnızlık paylaşılmaz Paylaşılsa yalnızlık olmaz.(Tanıtım Bülteninden)",
+             "writer": "Özdemir Asaf",
+             "distributor": "Yapı Kredi Yayınları",
+             "warrantyDaysLeft": 30,
+             "initialPrice": 10.0,
+             "currentPrice": 10.0,
+             "discountRatio": 0,
+             "initialStock": 35,
+             "currentStock": 9,
+             "imgUrl": "https://i.dr.com.tr/cache/600x600-0/originals/0000000330969-1.jpg"
+         }
+         ,
+         {
+             "productId": 31,
+             "productName": "Around the World in Eighty Days",
+             "category": "Novel",
+             "genre": "Adventure",
+             "year": "2016",
+             "description": "One night Phileas Fogg bets his companions that he can travel across the world in just eighty days and the very next day sets out from the port of Dover with his servant Passeportout to achieve his aim. Passing through exotic lands and dangerous places, they seize whatever transportation is at hand - whether train or elephant - always racing against the clock.There are many alarms and surprises along the way - and a last minute setback that makes all the difference between winning and losing.",
+             "writer": "Jules Verne",
+             "distributor": "Puffin Classics",
+             "warrantyDaysLeft": 30,
+             "initialPrice": 75.0,
+             "currentPrice": 30.0,
+             "discountStart": "2021-05-08",
+             "discountEnd": "2021-06-04",
+             "discountRatio": 40,
+             "initialStock": 60,
+             "currentStock": 0,
+             "imgUrl": "https://www.booktopia.com.au/covers/500/9780141366296/0000/around-the-world-in-80-days.jpg"
+         }
+     ];*/
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -158,15 +158,14 @@ const SearchScreen = ({navigation, route}) => {
         console.log(searchText);
         console.log("mertmertmert");
         setIsLoading(true);
-        setProducts(dummyProducts); // kapa
-        setFilteredProducts(dummyProducts);  // kapa
+        //setProducts(dummyProducts); // kapa
+        //setFilteredProducts(dummyProducts);  // kapa
         //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProductsBySearch?search=
-        fetch("http://localhost:8080/product/getProductsBySearch?search=" + searchText, {
+        fetch("http://10.0.2.2:8080/product/getProductsBySearch?search=" + searchText, {
             method: 'GET',
             headers: {
                 //'Content-Type': 'application/x-www-form-urlencoded',
                 'Content-Type': 'application/json', //json mı istiyor?
-                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 'Accept': 'application/json',
             },
         })

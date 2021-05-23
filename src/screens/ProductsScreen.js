@@ -124,19 +124,42 @@ function ProductsScreen({navigation}) {
 
     if(typeof(global.userid) === "undefined"){
         global.userid=-1;
+        global.mail = "";
     }
+    const [user , setUser] = useState("");
     const [searchText, setSearchText] = useState("");
     const [recommendedList,setRecommendedList] = useState([]);
     const [NewComerList,setNewComerList] = useState([]);
     const [HighestDiscountList,setHighestDiscountList] = useState([]);
 
     useEffect(()=>{
+        getUser();
         getRecommendedProductsfromAPI();
         getNewComerProductsfromAPI();
         getHighestDiscountfromAPI();
+
+
     },[]);
 
+    const getUser = () => {
+        fetch("http://10.0.2.2:8080/user/getByID?id=" + global.userid, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response =>response.json())
+            .then(json => {
+                global.username = json.name;
+                global.mobile = json.mobile;
+                console.log(username);
 
+            })
+            .catch(error => {
+                Alert("Error", "An error has occurred!");
+            })
+
+    };
     const renderRecommendedItem =  ({item, index}) => {
         return <BookListItem
             bookId={item.productId}
@@ -187,11 +210,10 @@ function ProductsScreen({navigation}) {
      );
  */
     const getRecommendedProductsfromAPI = () => {
-        return fetch('http://localhost:8080/product/recentlyPublished',{
+        return fetch('http://10.0.2.2:8080/product/recentlyPublished',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 Accept: 'application/json',
             },
         })
@@ -204,11 +226,10 @@ function ProductsScreen({navigation}) {
             });
     };
     const getNewComerProductsfromAPI = () => {
-        return fetch('http://localhost:8080/product/runningOut',{
+        return fetch('http://10.0.2.2:8080/product/runningOut',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 Accept: 'application/json',
             },
         })
@@ -222,11 +243,10 @@ function ProductsScreen({navigation}) {
     };
 
     const getHighestDiscountfromAPI = () => {
-        return fetch('http://localhost:8080/product/highestDiscount',{
+        return fetch('http://10.0.2.2:8080/product/highestDiscount',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization':'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 Accept: 'application/json',
             },
         })
@@ -238,31 +258,7 @@ function ProductsScreen({navigation}) {
                 console.error(error);
             });
     };
-    /*
-    .then(assignment =>{
-                      //console.log("List of Recommended: ", json);
-                      setRecommendedList(assignment);
-                })
 
-    .then(assignment =>{
-                        //console.log("List of Recommended: ", json);
-                        setNewComerList(assignment);
-                  })
-    */
-
-    /* function onLogOutGeneralPressed() {
-         const jsonValue = JSON.stringify(false);
-         AsyncStorage.setItem('isLoggedIn', jsonValue) // when isLoggedIn false we log out
-             .then(() => {
-                 navigation.goBack();
-             });
-     }*/
-
-    function onLogOutPressed() {
-        const jsonValue = JSON.stringify(false);
-        AsyncStorage.setItem('isLoggedIn', jsonValue) // when isLoggedIn false we log out
-            .then(() => {});
-    };
 
     const _handleNavigate = (pageName, params) => {
         navigation.navigate(pageName, params);
@@ -331,7 +327,7 @@ function ProductsScreen({navigation}) {
             <ScrollView
                 vertical
                 showsVerticalScrollIndicator={false}
-                style={{height: 680}}>
+                style={{height: 550}}>
                 <View
                     style={{
                         flexDirection: 'row',

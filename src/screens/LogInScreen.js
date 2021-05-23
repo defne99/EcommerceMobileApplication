@@ -16,6 +16,7 @@ import RegisterScreen from './RegisterScreen';
 import Input from "../components/Input";
 import Helper from "../services/Helper";
 import MyFetch from "../services/fetch";
+import Colors from '../constants/Colors';
 
 function LogInScreen(props) {
     console.disableYellowBox = true;
@@ -24,6 +25,7 @@ function LogInScreen(props) {
 
     const [email, setEmail] = useState(""); // value to username with setUsername function
     const [password, setPassword] = useState("");
+
 
 
     function onLogInPressed() {
@@ -40,7 +42,7 @@ function LogInScreen(props) {
             return false
         }
         //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/login
-        fetch("http://localhost:8080/login", {
+        fetch("http://10.0.2.2:8080/login", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,14 +57,13 @@ function LogInScreen(props) {
             //MyFetch("/login", "POST", {email, password})
             //.then(response => response.json())
             .then((result) => {
-                console.log(result,"buradayım");
                 if(result.ok){
                     AsyncStorage.setItem('isLoggedIn', "true")
                         .then(response => result.json()).then(hey => {
-                        console.log(hey);
                         global.userid = hey;
-                        //UserStore.email=this.state.email;
+                        global.mail = email;
                         navigation.navigate("Products")
+
                     });
                 } else {
                     if(status === 400){
@@ -78,6 +79,11 @@ function LogInScreen(props) {
             console.warn(error)
             Alert.alert("Warning", "Please check your information")
         })
+
+
+    }
+    function onForgotPasswordPressed() {
+        navigation.navigate("ForgotPassword");
     }
 
     function onRegisterPressed() {
@@ -97,6 +103,12 @@ function LogInScreen(props) {
             style={styles.buttonStyle_register}
             onPress={() => onRegisterPressed()}>
             <Text style={styles.logIn_register_TextStyle}>SIGN UP</Text>
+        </TouchableOpacity>
+    }
+    function renderForgotPassword() {
+        return <TouchableOpacity
+            onPress={() => onForgotPasswordPressed()}>
+            <Text style={styles.forgotPasswordStyle}> Forgot Password?</Text>
         </TouchableOpacity>
     }
 
@@ -128,7 +140,7 @@ function LogInScreen(props) {
                 />
                 {renderLogInButton()}
                 {renderRegisterButton()}
-                <Text style={styles.forgotPasswordStyle}> Forgot Password?</Text>
+                {renderForgotPassword()}
             </View>
         </SafeAreaView>
     );
@@ -137,7 +149,8 @@ function LogInScreen(props) {
 const styles = StyleSheet.create({
 
     forgotPasswordStyle: {
-        marginTop: 7
+        marginTop: 7,
+        color: Colors.BLACK,
     },
 
     buttonStyle_proceed: {

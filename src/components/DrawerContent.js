@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from 'react';
 import {
     View,
     Text,
@@ -8,14 +8,18 @@ import {
     Image,
     ImageBackground,
     Dimensions,
-    SafeAreaView
-} from "react-native";
+    SafeAreaView, Alert,
+} from 'react-native';
 import Colors from "../constants/Colors";
 import DrawerContentItem from "./DrawerContentItem";
 import Icon from 'react-native-vector-icons/Ionicons';
+import UserNameInput from './UserNameInput';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Input from './Input';
 
 
 const DrawerContent = ({route, navigation}) => {
+    const [userName, setUserName] = useState("");
 
     const _handleDrawerNavigate = (pageName) => {
         navigation.navigate(pageName);
@@ -65,17 +69,27 @@ const DrawerContent = ({route, navigation}) => {
                 <View style={styles.topContainer}>
                     <View style={{
                         flexDirection:'row',
+                        justifyContent:'space-between',
                     }}>
                         <View style={{
                             flexDirection:'column',
                         }}>
                             <Icon name="ios-person"
                                   style={{
-                                      fontSize:70,
+                                      fontSize:60,
                                       paddingLeft:5,
                                       top:40,
+                                      color:Colors.DARK_GRAY
 
                                   }} />
+                        </View>
+                        <View style={{
+                            flexDirection:'column',
+                        }}>
+                            <UserNameInput
+                                setValue={setUserName}
+                                value={global.username}
+                            />
                         </View>
 
                     </View>
@@ -88,6 +102,9 @@ const DrawerContent = ({route, navigation}) => {
                     }} iconSize={19}/>
                     <DrawerContentItem icon="list" menuTitle="Categories" onPress={() => {
                         _handleDrawerNavigate("Categories")
+                    }} iconSize={19}/>
+                    <DrawerContentItem icon="user-alt" menuTitle="My Account" onPress={() => {
+                        _handleDrawerNavigate("Profile")
                     }} iconSize={19}/>
                 </ScrollView>
 

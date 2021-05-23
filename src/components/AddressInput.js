@@ -1,6 +1,7 @@
 import React from "react";
 import {TextInput, StyleSheet} from "react-native";
-import PropTypes from "prop-types"; // properties to input
+import PropTypes from "prop-types";
+import Colors from '../constants/Colors'; // properties to input
 
 const AddressInput = (props) => {
     const {value, setValue, placeholderText, isSecureText, keyboardType,autoCorrect,autoCapitalize} = props;
@@ -23,6 +24,7 @@ const styles = StyleSheet.create({
     defaultTextInputStyle: {
         borderWidth: 1,
         borderRadius: 8,
+        borderColor:Colors.METALIC_GRAY,
         height: 48,
         width:150,
         fontSize: 16,

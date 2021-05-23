@@ -1,38 +1,99 @@
-import React, {Component, useState} from 'react';
-import {
-    StyleSheet,
-    View,
-    Switch,
-    SafeAreaView,
-    TouchableOpacity,
-    Text,
-    ScrollView,
-    TextInput,
-    Image, Alert,
-} from 'react-native';
-import AddressInput from '../components/AddressInput';
-import Input from '../components/Input';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet,SafeAreaView, View, Text, Image, ScrollView, TouchableOpacity, Alert, FlatList, Dimensions, TextInput} from 'react-native';
+import Colors from "../constants/Colors";
+import SavedAddressListItem from '../components/SavedAddressListItem';
 import OpenAddressInput from '../components/OpenAddressInput';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddressInput from '../components/AddressInput';
 
 
-function AddressScreen(props){
-    console.disableYellowBox = true;
-    const {navigation} = props;
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get("window");
+console.disableYellowBox = true;
+
+
+function AddressScreen({navigation}) {
     const [City, setCity] = useState("");
     const [Country, setCountry] = useState("");
     const [PostalCode, setPostalCode] = useState("");
     const [AddressType, setAddressType] = useState("");
     const [OpenAddress, setOpenAddress] = useState("");
+    const [addressList,setAddressList] = useState([]);
+    const [addID,setAddID] = useState(0);
+    global.currentAddressId = 0;
 
-    function renderProceedButton() {
+    useEffect(()=>{
+        getSavedAddressesFromAPI();
+    },[]);
+
+    const renderSavedAddressListItem =  ({item, index}) => {
+        return <SavedAddressListItem
+            addressId={item.id}
+            _handleNavigate={_handleNavigate}
+            addressType={item.type}
+            openAddress={item.full_address}
+            Country={item.country}
+            City={item.city}
+            containerStyle={{width: (SCREEN_WIDTH - 20) / 2.2}}
+        />
+    }
+    const _handleNavigate = (pageName, params) => {
+        navigation.navigate(pageName, params);
+    }
+
+    function renderSaveAddressPressed() {
         return <TouchableOpacity
             style={styles.buttonStyleSave}
-            onPress={() => onProceedPressed()}>
-            <Text style={styles.buy_TextStyle}>PROCEED TO CHECKOUT</Text>
+            onPress={() => onSaveAddressPressed()}>
+            <Text style={styles.buy_TextStyle}>Save Address</Text>
         </TouchableOpacity>
     }
     function onProceedPressed() {
+        _handleNavigate("PaymentScreen", {params: {currentAddressId}});
+    }
+    const getSavedAddressesFromAPI = () => {
+        return fetch('http://10.0.2.2:8080/address/getByEmail',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({
+                email:global.mail,
+            })
+        })
+            .then((response) => response.json())
+            .then(list => {
+                console.log("List of New Addresses: ", list);
+                setAddressList(list);
+            }).catch((error) => {
+                console.error(error);
+            });
+    };
+    const SendNewAddressToDatabase = () => {
+        fetch("http://10.0.2.2:8080/address/add", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email:global.mail,
+                city:City,
+                country:Country,
+                postcode:PostalCode,
+                full_address:OpenAddress,
+                type:AddressType,
+            })
+        }).then((response) => response.json())
+            .then(list => {
+                console.log("List of New Addresses: ", list);
+                global.currentAddressId = list;
+                onProceedPressed();
+            }).catch((error) => {
+            console.error(error);
+        });
+    };
+
+
+    function onSaveAddressPressed() {
         //Address Information Posting
         if(City==="" || Country===""|| PostalCode==="" || AddressType===""||OpenAddress==="")
         {
@@ -40,62 +101,91 @@ function AddressScreen(props){
             return false;
         }
 
+        SendNewAddressToDatabase();
+
         Alert.alert("Address", "Your address information has successfully saved")
-        fetch("http://localhost:8080/address/add", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email:"omertabar@sabanciuniv.edu",
-                city:City,
-                country:Country,
-                postcode:PostalCode,
-                full_address:OpenAddress,
-                type:AddressType,
-            })
-        })
-            .then((result1) => {
-                console.log(result1)
-            }).catch(error1 => {
-            console.warn(error1)
-            Alert.alert("Warning", "Please check your information")
-        })
-        navigation.navigate("PaymentScreen");
-
-
-
 
     }
-    return(
-        <SafeAreaView>
-            <ScrollView
-                vertical
-                showsVerticalScrollIndicator={false}
-                style={{height: 665}}>
-                <View style={{
-                    backgroundColor: '#FF8303',
-                    height: 80,
+
+    return (
+        <SafeAreaView style={{backgroundColor: Colors.WHITE}}>
+            <View
+                style={{
+                    backgroundColor: 'lightgrey',
+                    height: 60,
                     borderBottomRightRadius: 20,
                     borderBottomLeftRadius: 20,
                     paddingHorizontal: 20,
                 }}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            marginTop: 20,
-                            width: '100%',
-                        }}>
-                        <View style={{width: '80%', alignItems: 'flex-start'}}>
-                            <Text style={{
-                                fontSize:16,
-                                fontWeight:'bold',
-                                paddingLeft:12,
-                                marginVertical:5,
-                                color:"white"
-                            }}>Address Information</Text>
-                        </View>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        marginTop: 10,
+                        width: '100%',
+                    }}>
+                    <View style={{width: '65%'}}>
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                color: '#FFF',
+                                fontWeight: 'bold',
+                            }}> Address Information</Text>
+                    </View>
+                </View>
+
+            </View>
+            <ScrollView
+                vertical
+                showsVerticalScrollIndicator={false}
+                style={{height:680}}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 20,
+                        width: '100%',
+                        alignItems: 'center',
+                        top:10
+                    }}>
+                    <View style={{width: '50%'}}>
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                fontSize: 18,
+                                color: '#FF8303',
+                            }}>
+                            Saved Addresses
+                        </Text>
+                    </View>
+
+                </View>
+
+                <FlatList
+                    horizontal={true}
+                    showsVerticalScrollIndicator={false}
+                    data={addressList}
+                    renderItem={renderSavedAddressListItem}
+                    keyExtractor={item => item.id}
+                />
+
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 20,
+                        width: '100%',
+                        alignItems: 'center',
+                    }}>
+                    <View style={{width: '50%'}}>
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                fontSize: 18,
+                                color: '#FF8303',
+                                top:10
+                            }}>
+                            Add New Address
+                        </Text>
                     </View>
                 </View>
                 <View style={{
@@ -144,23 +234,28 @@ function AddressScreen(props){
                     value={OpenAddress}
                     keyboardType='default'
                 />
-                {renderProceedButton()}
+                <View style={{
+                    flexDirection:'row',
+                    justifyContent:'center'
+                }}>
+                    {renderSaveAddressPressed()}
+                </View>
             </ScrollView>
         </SafeAreaView>
     );
 }
 const styles = StyleSheet.create({
     buttonStyleSave: {
-        height: 60,
-        width:300,
+        height: 50,
+        width:150,
         borderWidth: 1,
         borderRadius: 30,
         marginTop: 20,
-        left:42,
+        left:110,
         justifyContent: 'center',
         flexDirection: 'column',
         backgroundColor: '#FF8303',
-        borderColor: '#FF8303'
+        borderColor: Colors.METALIC_GRAY
     },
     defaultTextInputStyle: {
         height: 42,
@@ -191,4 +286,5 @@ const styles = StyleSheet.create({
     },
 
 });
+
 export default AddressScreen;

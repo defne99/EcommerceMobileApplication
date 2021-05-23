@@ -1,6 +1,7 @@
 import React from "react";
 import {TextInput, StyleSheet} from "react-native";
-import PropTypes from "prop-types"; // properties to input
+import PropTypes from "prop-types";
+import Colors from '../constants/Colors'; // properties to input
 
 
 const SmallPaymentInput = (props) => {
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         height: 48,
         width:150,
+        borderColor:Colors.METALIC_GRAY,
         fontSize: 16,
         paddingLeft: 12,
         marginBottom: 16,

@@ -18,6 +18,7 @@ function RegisterScreen({navigation}) {
     const [nameSurname, setNameSurname] = useState("")
     const [password, setPassword] = useState("")
     const [passwordSecond, setPasswordSecond] = useState("")
+    const [phoneNumber, setPhoneNumber] = useState("")
     const [email, setEmail] = useState("")
 
 
@@ -53,17 +54,17 @@ function RegisterScreen({navigation}) {
         }
 
 
-        fetch("http://localhost:8080/register/addUser", {
+        fetch("http://10.0.2.2:8080/register/addUser", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name :nameSurname,
                 email:email,
                 password:password,
+                //phoneNumber: phoneNumber,
             })
         }).then(response => response.json())
             .catch(error => {
@@ -126,6 +127,12 @@ function RegisterScreen({navigation}) {
                        value={passwordSecond}
                        isSecureText={true}
                        keyboardType="default"
+                />
+                <Input setValue={setPhoneNumber}
+                       placeholderText="Phone Number"
+                       value={phoneNumber}
+                       isSecureText={true}
+                       keyboardType="number-pad"
                 />
                 {renderSaveButton()}
                 {renderReturnButton()}

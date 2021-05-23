@@ -27,7 +27,7 @@ const CartListItem = (props) => {
 
 
     function onAddPressed() {
-        fetch("http://localhost:8080/cart/IncrementProduct?userId=" + userId +"&productId=" + bookId +  "&quantity=1", {
+        fetch("http://10.0.2.2:8080/cart/IncrementProduct?userId=" + userId +"&productId=" + bookId +  "&quantity=1", {
             method: 'Put',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const CartListItem = (props) => {
     }
 
     function onRemovePressed() {
-        fetch("http://localhost:8080/cart/DecrementProduct?userId="+ userId +"&productId=" + bookId +  "&quantity=1", {
+        fetch("http://10.0.2.2:8080/cart/DecrementProduct?userId="+ userId +"&productId=" + bookId +  "&quantity=1", {
             method: 'Put',
             headers: {
                 'Content-Type': 'application/json',
@@ -89,14 +89,7 @@ const CartListItem = (props) => {
             Alert.alert("Warning", "Please check your information")
         })
     }
-    /*
-    then((json) => {
-       console.log("List of Cart Items: ", json);
-       setCartList(json);
-       console.log("List of Cart Items: ", CartList);
-   }).
-    */
-    //<Text style={[styles.authorText,authorTextStyle]}>{authorName}</Text>
+
     return (
         <View style={{
             flexDirection:'row',

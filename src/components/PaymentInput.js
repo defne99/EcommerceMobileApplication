@@ -1,6 +1,7 @@
 import React from "react";
 import {TextInput, StyleSheet} from "react-native";
-import PropTypes from "prop-types"; // properties to input
+import PropTypes from "prop-types";
+import Colors from '../constants/Colors'; // properties to input
 
 
 const PaymentInput = (props) => {
@@ -14,6 +15,7 @@ const PaymentInput = (props) => {
             value={value}
             autoCorrect={autoCorrect}
             autoCapitalize={autoCapitalize}
+            isSecureText={isSecureText}
         />
     );
 }
@@ -21,9 +23,10 @@ const PaymentInput = (props) => {
 const styles = StyleSheet.create({
 
     defaultTextInputStyle: {
-        marginTop:10,
+        marginTop:15,
         borderWidth: 1,
         borderRadius: 8,
+        borderColor:Colors.METALIC_GRAY,
         height: 48,
         width:300,
         fontSize: 16,
@@ -48,7 +51,8 @@ PaymentInput.defaultProps={
     value: "",
     autoCorrect: false,
     autoCapitalize: "none",
-    keyboardType: "default"
+    keyboardType: "default",
+    isSecureText: false,
 }
 
 export default PaymentInput;

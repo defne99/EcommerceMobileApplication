@@ -51,4 +51,3 @@ Input.defaultProps={
 }
 
 export default Input;
-

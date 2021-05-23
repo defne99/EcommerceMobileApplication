@@ -21,49 +21,14 @@ const Detail = ({navigation, route}) => {
     const [bookDetail, setBookDetail] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [rate, setRate] = useState(0.0);
-
-    /* const bookDetailResponse = {
-             "productId": 31,
-             "productName": "Around the World in Eighty Days",
-             "category": "Novel",
-             "genre": "Adventure",
-             "year": "2016",
-             "description": "One night Phileas Fogg bets his companions that he can travel across the world in just eighty days and the very next day sets out from the port of Dover with his servant Passeportout to achieve his aim. Passing through exotic lands and dangerous places, they seize whatever transportation is at hand - whether train or elephant - always racing against the clock.There are many alarms and surprises along the way - and a last minute setback that makes all the difference between winning and losing.",
-             "writer": "Jules Verne",
-             "distributor": "Puffin Classics",
-             "warrantyDaysLeft": 30,
-             "initialPrice": 75.0,
-             "currentPrice": 30.0,
-             "discountStart": "2021-05-08",
-             "discountEnd": "2021-06-04",
-             "discountRatio": 40,
-             "initialStock": 60,
-             "currentStock": 27,
-             "imgUrl": "https://www.booktopia.com.au/covers/500/9780141366296/0000/around-the-world-in-80-days.jpg"
-         } */
-
     useEffect(() => {
         let bookId = route.params.params.bookId;
         global.generalBookId = bookId;
-        /*console.log("mertmert");
-        console.log(bookId);
-        console.log("mertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmertmert");
-        console.log(route);
-        console.log(route.params);
-        console.log(route.params.params);
-        console.log(route.params.params.bookId);
-        console.log(bookId);*/
-        //console.log(bookId);
-        //console.log(bookId+1);
-        //bookId = 3;
         setIsLoading(true);
-        //setBookDetail(bookDetailResponse);
-        //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProduct?productId=
-        fetch("http://localhost:8080/product/getProduct?productId=" + bookId, {
+        fetch("http://10.0.2.2:8080/product/getProduct?productId=" + bookId, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 Accept: 'application/json'
             },
         })
@@ -81,13 +46,11 @@ const Detail = ({navigation, route}) => {
 
 
         // Get Rating request
-        //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product
-        fetch("http://localhost:8080/rate/getRate?productId=" + bookId, {
+        fetch("http://10.0.2.2:8080/rate/getRate?productId=" + bookId, {
             //console.log(route.params);
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 'Accept': 'application/json'
             },
         })
@@ -105,32 +68,15 @@ const Detail = ({navigation, route}) => {
 
         // Comment request
         //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getCommentsOfProduct?productId=
-        fetch("http://localhost:8080/comments/getCommentsOfProduct?productId=" + bookId, {
+        fetch("http://10.0.2.2:8080/comments/getCommentsOfProduct?productId=" + bookId, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 'Accept': 'application/json'
             },
         })
             .then(response => response.json())
             .then(comments => {
-                //console.log(comments);
-                /*
-                comments = [
-                    {
-                        id: 1,
-                        userId:2,
-                        productId: 30,
-                        comment: "Great",
-                    },
-                    {
-                        id: 2,
-                        userId:3,
-                        productId: 30,
-                        comment: "Super",
-                    }
-                ];*/
                 setComments(comments);
             })
             .catch(error => {
@@ -140,50 +86,42 @@ const Detail = ({navigation, route}) => {
             })
 
     },[])
-
-    /*const _handleComment = (comment) => {
-            //console.log(rating);
-            fetch("http://localhost:8080/comments/comment", {
-                //console.log(route.params);
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                         productId : global.generalBookId,
-                        userId: global.userid,
-                        comment : comment
-
-                })
-            })
-                .then(response => response.json())
-                .then(defne => {
-                })
-                .catch(error => {
-                    Alert("Error", "An error has occurred!");
-                })
-        }*/
-
-
     function onCommentPressed(){
         /*console.log("defnedefne");
         console.log(global.userid);
         console.log(global.generalBookId);
         console.log(Name);
         console.log(comment);*/
-        fetch("http://localhost:8080/comments/comment", {
+        fetch("http://10.0.2.2:8080/comments/comment", {
             method: 'Post',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 'Accept': 'application/json'
             },
             body:JSON.stringify({
                 userId:global.userid,
                 productId:global.generalBookId,
-                fullname: Name ,
+                fullname: global.username ,
+                comment: comment,
+            })
+        }) .then(response => response.json())
+            .then(defne => {
+                setComments(defne);
+            })
+            .then(response => response.json())
+
+    }
+    function onAnonymusCommentPressed(){
+        fetch("http://10.0.2.2:8080/comments/comment", {
+            method: 'Post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body:JSON.stringify({
+                userId:global.userid,
+                productId:global.generalBookId,
+                fullname: Name,
                 comment: comment,
             })
         }) .then(response => response.json())
@@ -202,11 +140,10 @@ const Detail = ({navigation, route}) => {
         console.log(global.userid);
         console.log(global.generalBookId);
 
-        fetch("http://localhost:8080/cart/addToCart?userId="+global.userid+"&productId="+ global.generalBookId +"&quantity=1", {
+        fetch("http://10.0.2.2:8080/cart/addToCart?userId="+global.userid+"&productId="+ global.generalBookId +"&quantity=1", {
             method: 'Post',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 'Accept': 'application/json'
             },
         })
@@ -218,6 +155,15 @@ const Detail = ({navigation, route}) => {
             <TouchableOpacity
                 style={styles.buttonStyle_comment}
                 onPress={() => onCommentPressed()}>
+                <Text style={styles.addtocart_TextStyle}>Comment</Text>
+            </TouchableOpacity>
+        );
+    }
+    function renderAnonymusCommentButton() {
+        return (
+            <TouchableOpacity
+                style={styles.buttonStyle_comment}
+                onPress={() => onAnonymusCommentPressed()}>
                 <Text style={styles.addtocart_TextStyle}>Comment</Text>
             </TouchableOpacity>
         );
@@ -243,21 +189,20 @@ const Detail = ({navigation, route}) => {
 
     const _renderComments = ({item, index}) => {
         return (
-            <View style={{width: "100%", paddingVertical: 15, borderBottomWidth: 5, borderBottomColor: Colors.METALIC_GRAY}}>
-                <Text style={{fontWeight:'bold',fontSize:16}}>{item.fullname}</Text>
-                <Text>{item.comment}</Text>
+            <View style={{width: "100%", paddingVertical: 15, borderBottomWidth: 5,borderTopWidth:5,borderTopColor:Colors.BEST_ORANGE, borderBottomColor: Colors.BEST_ORANGE, borderRadius:16,marginTop:12, marginBottom:2}}>
+                <Text style={{fontWeight:'bold',fontSize:16,color:Colors.DARK_GRAY,left:15}}>{item.fullname}</Text>
+                <Text style={{left:15}}>{item.comment}</Text>
             </View>
         )
     }
 
     const _handleSendRating = (rating) => {
         //console.log(rating);
-        fetch("http://localhost:8080/rate/rate", {
+        fetch("http://10.0.2.2:8080/rate/rate", {
             //console.log(route.params);
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
@@ -285,23 +230,7 @@ const Detail = ({navigation, route}) => {
                         borderBottomLeftRadius: 20,
                         paddingHorizontal: 20,
                     }}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            marginTop: -20,
-                            marginLeft: -20,
-                            width: '100%',
-                        }}>
-                        <View style={{width: '10%', paddingLeft: 20}}>
-                            <TouchableOpacity onPress={() => navigation.goBack()}>
-                                <Image
-                                    source={require('../constants/images/17.png')}
-                                    style={{marginVertical: 40}}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+
                 </View>
 
                 {
@@ -471,27 +400,10 @@ const Detail = ({navigation, route}) => {
                                     <TextInput
                                         autoCorrect={false}
                                         autoCapitalize={false}
-                                        style={{
-                                            height: 42,
-                                            borderWidth: 1,
-                                            borderRadius: 16,
-                                            marginTop: 15,
-                                            paddingLeft: 16,
-                                            borderColor: '#FF9C33',
-                                        }}
-                                        onChangeText={setName}
-                                        placeholder="Full Name"
-                                        placeholderTextColor="#FF9C33"
-                                        value={Name}
-                                        keyboardType="default"
-                                    />
-                                    <TextInput
-                                        autoCorrect={false}
-                                        autoCapitalize={false}
                                         style={styles.comments}
                                         onChangeText={setComment}
-                                        placeholder="Leave A Comment"
-                                        placeholderTextColor="#FF9C33"
+                                        placeholder="Leave A Comment"S
+                                        placeholderTextColor= {Colors.DARK_GRAY}
                                         value={comment}//_handleComment
                                         keyboardType="default"
                                         maxLength={200}
@@ -536,14 +448,6 @@ const Detail = ({navigation, route}) => {
                             marginLeft: -20,
                             width: '100%',
                         }}>
-                        <View style={{width: '10%', paddingLeft: 20}}>
-                            <TouchableOpacity onPress={() => navigation.goBack()}>
-                                <Image
-                                    source={require('../constants/images/17.png')}
-                                    style={{marginVertical: 40}}
-                                />
-                            </TouchableOpacity>
-                        </View>
                     </View>
                 </View>
 
@@ -696,13 +600,13 @@ const Detail = ({navigation, route}) => {
                                             borderRadius: 16,
                                             marginTop: 15,
                                             paddingLeft: 16,
-                                            borderColor: '#FF9C33',
+                                            borderColor: Colors.DARK_GRAY,
                                         }}
                                         autoCorrect={false}
                                         autoCapitalize={false}
                                         onChangeText={setName}
                                         placeholder="Full Name"
-                                        placeholderTextColor="#FF9C33"
+                                        placeholderTextColor={Colors.DARK_GRAY}
                                         value={Name}
                                         keyboardType="default"
                                     />
@@ -712,7 +616,7 @@ const Detail = ({navigation, route}) => {
                                         autoCapitalize={false}
                                         onChangeText={setComment}
                                         placeholder="Leave A Comment"
-                                        placeholderTextColor="#FF9C33"
+                                        placeholderTextColor={Colors.DARK_GRAY}
                                         value={comment}//_handleComment
                                         keyboardType="default"
                                         maxLength={200}
@@ -720,7 +624,7 @@ const Detail = ({navigation, route}) => {
                                         numberOfLines={4}
                                         multiline={true}
                                     />
-                                    {renderCommentButton()}
+                                    {renderAnonymusCommentButton()}
                                     <FlatList
                                         data={comments}
                                         renderItem={_renderComments}
@@ -794,7 +698,7 @@ const styles = StyleSheet.create({
         height: 100,
         marginTop: 20,
         borderWidth: 1,
-        borderColor: '#FF9C33',
+        borderColor: Colors.DARK_GRAY,
         borderRadius: 20,
         paddingTop: 10,
         paddingLeft:16

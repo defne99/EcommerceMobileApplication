@@ -26,99 +26,99 @@ const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 function SubCategoriesScreen({route, navigation}) {
     console.disableYellowBox = true;
 
-    const dummyProducts = [
-        {
-            "productId": 30,
-            "productName": "Dokuza Kadar On",
-            "category": "Poetry",
-            "genre": "Turkish Poetry",
-            "year": "2017",
-            "description": "Yalnızlık paylaşılmaz Paylaşılsa yalnızlık olmaz.(Tanıtım Bülteninden)",
-            "writer": "Özdemir Asaf",
-            "distributor": "Yapı Kredi Yayınları",
-            "warrantyDaysLeft": 30,
-            "initialPrice": 10.0,
-            "currentPrice": 10.0,
-            "discountRatio": 0,
-            "initialStock": 35,
-            "currentStock": 27,
-            "imgUrl": "https://i.dr.com.tr/cache/600x600-0/originals/0000000330969-1.jpg"
-        }
-        ,
-        {
-            "productId": 31,
-            "productName": "Around the World in Eighty Days",
-            "category": "Novel",
-            "genre": "Adventure",
-            "year": "2016",
-            "description": "One night Phileas Fogg bets his companions that he can travel across the world in just eighty days and the very next day sets out from the port of Dover with his servant Passeportout to achieve his aim. Passing through exotic lands and dangerous places, they seize whatever transportation is at hand - whether train or elephant - always racing against the clock.There are many alarms and surprises along the way - and a last minute setback that makes all the difference between winning and losing.",
-            "writer": "Jules Verne",
-            "distributor": "Puffin Classics",
-            "warrantyDaysLeft": 30,
-            "initialPrice": 75.0,
-            "currentPrice": 30.0,
-            "discountStart": "2021-05-08",
-            "discountEnd": "2021-06-04",
-            "discountRatio": 40,
-            "initialStock": 60,
-            "currentStock": 27,
-            "imgUrl": "https://www.booktopia.com.au/covers/500/9780141366296/0000/around-the-world-in-80-days.jpg"
-        }
-        ,
-        {
-            "productId": 32,
-            "productName": "Elizabeth & Margaret: The Intimate World of the Windsor Sisters",
-            "category": "Biography",
-            "year": "2021",
-            "description": "Perfect for fans of The Crown, this captivating biography from a New York Times bestselling author follows Queen Elizabeth II and her sister Margaret as they navigate life in the royal spotlight. ",
-            "writer": "Andrew Morton",
-            "distributor": "Grand Central Publishing",
-            "warrantyDaysLeft": 30,
-            "initialPrice": 200.0,
-            "currentPrice": 180.0,
-            "discountStart": "2021-04-01",
-            "discountEnd": "2021-05-01",
-            "discountRatio": 10,
-            "initialStock": 30,
-            "currentStock": 3,
-            "imgUrl": "https://images.booksense.com/images/464/700/9781538700464.jpg"
-        }
-        ,
-        {
-            "productId": 33,
-            "productName": "The Essential New York Times Cookbook: Classic Recipes for a New Century",
-            "category": "Cookbook",
-            "year": "2010",
-            "description": "A New York Times bestseller and Winner of the James Beard Award All the best recipes from 150 years of distinguished food journalism—a volume to take its place in America's kitchens alongside Mastering the Art of French Cooking and How to Cook Everything.",
-            "writer": "Amanda Hesser",
-            "distributor": "W. W. Norton Company",
-            "warrantyDaysLeft": 30,
-            "initialPrice": 210.0,
-            "currentPrice": 210.0,
-            "discountRatio": 0,
-            "initialStock": 35,
-            "currentStock": 17,
-            "imgUrl": "https://i5.walmartimages.com/asr/78d7fe13-ecde-4003-9a8e-3ac1de7c387b_1.037cb7f19f37b2292040df4c932613fb.jpeg?odnWidth=612&odnHeight=612&odnBg=ffffff"
-        }
-        ,
-        {
-            "productId": 34,
-            "productName": "Who Fears Death",
-            "category": "Novel",
-            "genre": "Fantasy",
-            "year": "2014",
-            "description": "An award-winning literary author enters the world of magical realism with her World Fantasy Award-winning novel of a remarkable woman in post-apocalyptic Africa. ",
-            "writer": "Nnedi Okorafor",
-            "distributor": "DAW/Penguin",
-            "warrantyDaysLeft": 30,
-            "initialPrice": 99.9,
-            "currentPrice": 99.9,
-            "discountRatio": 0,
-            "initialStock": 50,
-            "currentStock": 25,
-            "imgUrl": "https://images-na.ssl-images-amazon.com/images/I/51C5dkC4H+L._SX326_BO1,204,203,200_.jpg"
-        }
-    ];
+    /* const dummyProducts = [
+         {
+             "productId": 30,
+             "productName": "Dokuza Kadar On",
+             "category": "Poetry",
+             "genre": "Turkish Poetry",
+             "year": "2017",
+             "description": "Yalnızlık paylaşılmaz Paylaşılsa yalnızlık olmaz.(Tanıtım Bülteninden)",
+             "writer": "Özdemir Asaf",
+             "distributor": "Yapı Kredi Yayınları",
+             "warrantyDaysLeft": 30,
+             "initialPrice": 10.0,
+             "currentPrice": 10.0,
+             "discountRatio": 0,
+             "initialStock": 35,
+             "currentStock": 27,
+             "imgUrl": "https://i.dr.com.tr/cache/600x600-0/originals/0000000330969-1.jpg"
+         }
+         ,
+         {
+             "productId": 31,
+             "productName": "Around the World in Eighty Days",
+             "category": "Novel",
+             "genre": "Adventure",
+             "year": "2016",
+             "description": "One night Phileas Fogg bets his companions that he can travel across the world in just eighty days and the very next day sets out from the port of Dover with his servant Passeportout to achieve his aim. Passing through exotic lands and dangerous places, they seize whatever transportation is at hand - whether train or elephant - always racing against the clock.There are many alarms and surprises along the way - and a last minute setback that makes all the difference between winning and losing.",
+             "writer": "Jules Verne",
+             "distributor": "Puffin Classics",
+             "warrantyDaysLeft": 30,
+             "initialPrice": 75.0,
+             "currentPrice": 30.0,
+             "discountStart": "2021-05-08",
+             "discountEnd": "2021-06-04",
+             "discountRatio": 40,
+             "initialStock": 60,
+             "currentStock": 27,
+             "imgUrl": "https://www.booktopia.com.au/covers/500/9780141366296/0000/around-the-world-in-80-days.jpg"
+         }
+         ,
+         {
+             "productId": 32,
+             "productName": "Elizabeth & Margaret: The Intimate World of the Windsor Sisters",
+             "category": "Biography",
+             "year": "2021",
+             "description": "Perfect for fans of The Crown, this captivating biography from a New York Times bestselling author follows Queen Elizabeth II and her sister Margaret as they navigate life in the royal spotlight. ",
+             "writer": "Andrew Morton",
+             "distributor": "Grand Central Publishing",
+             "warrantyDaysLeft": 30,
+             "initialPrice": 200.0,
+             "currentPrice": 180.0,
+             "discountStart": "2021-04-01",
+             "discountEnd": "2021-05-01",
+             "discountRatio": 10,
+             "initialStock": 30,
+             "currentStock": 3,
+             "imgUrl": "https://images.booksense.com/images/464/700/9781538700464.jpg"
+         }
+         ,
+         {
+             "productId": 33,
+             "productName": "The Essential New York Times Cookbook: Classic Recipes for a New Century",
+             "category": "Cookbook",
+             "year": "2010",
+             "description": "A New York Times bestseller and Winner of the James Beard Award All the best recipes from 150 years of distinguished food journalism—a volume to take its place in America's kitchens alongside Mastering the Art of French Cooking and How to Cook Everything.",
+             "writer": "Amanda Hesser",
+             "distributor": "W. W. Norton Company",
+             "warrantyDaysLeft": 30,
+             "initialPrice": 210.0,
+             "currentPrice": 210.0,
+             "discountRatio": 0,
+             "initialStock": 35,
+             "currentStock": 17,
+             "imgUrl": "https://i5.walmartimages.com/asr/78d7fe13-ecde-4003-9a8e-3ac1de7c387b_1.037cb7f19f37b2292040df4c932613fb.jpeg?odnWidth=612&odnHeight=612&odnBg=ffffff"
+         }
+         ,
+         {
+             "productId": 34,
+             "productName": "Who Fears Death",
+             "category": "Novel",
+             "genre": "Fantasy",
+             "year": "2014",
+             "description": "An award-winning literary author enters the world of magical realism with her World Fantasy Award-winning novel of a remarkable woman in post-apocalyptic Africa. ",
+             "writer": "Nnedi Okorafor",
+             "distributor": "DAW/Penguin",
+             "warrantyDaysLeft": 30,
+             "initialPrice": 99.9,
+             "currentPrice": 99.9,
+             "discountRatio": 0,
+             "initialStock": 50,
+             "currentStock": 25,
+             "imgUrl": "https://images-na.ssl-images-amazon.com/images/I/51C5dkC4H+L._SX326_BO1,204,203,200_.jpg"
+         }
+     ];*/
 
     const [subCategories, setSubCategories] = useState([]);
     const [categoryName, setCategoryName] = useState("");
@@ -153,15 +153,14 @@ function SubCategoriesScreen({route, navigation}) {
         }
 
         setIsLoading(true);
-        setProducts(dummyProducts); // TODO: kapa
-        setFilteredProducts(dummyProducts); // TODO: kapa
+        //setProducts(dummyProducts); // TODO: kapa
+        //setFilteredProducts(dummyProducts); // TODO: kapa
         // localhost:8080/products/1/category
         //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getByCategory?category=
-        fetch("http://localhost:8080/product/getProductsByCategory?category=" + categoryName, {
+        fetch("http://10.0.2.2:8080/product/getProductsByCategory?category=" + categoryName, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                 'Accept': 'application/json'
             },
         }).then(response => response.json())
@@ -192,13 +191,12 @@ function SubCategoriesScreen({route, navigation}) {
         //setIsLoading(true);
         if (subCategoryId === 0) { // for "All"
             navigation.setOptions({title: categoryName}); // all oldugunda title genre adi
-            setFilteredProducts(dummyProducts); // TODO: kapa
+            // setFilteredProducts(dummyProducts); // TODO: kapa
             //https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getByCategory?category=
-            fetch("http://localhost:8080/product/getProductsByCategory?category=" + categoryName, {
+            fetch("http://10.0.2.2:8080/product/getProductsByCategory?category=" + categoryName, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                     'Accept': 'application/json'
                 },
             }).then(response => response.json())
@@ -225,11 +223,10 @@ function SubCategoriesScreen({route, navigation}) {
                 }
             })
             //"https://d4ee5144-8771-4114-965b-a9fb57da56ee.mock.pstmn.io/product/getProductsByGenre?genre="
-            fetch("http://localhost:8080/product/getProductsByGenre?genre=" + subCategoryName, {
+            fetch("http://10.0.2.2:8080/product/getProductsByGenre?genre=" + subCategoryName, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic dWxhc2VyYXNsYW5Ac2FiYW5jaXVuaXYuZWR1OmFkbWludWxhcw==',
                     'Accept': 'application/json'
                 },
             })
