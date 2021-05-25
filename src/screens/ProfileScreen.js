@@ -65,10 +65,10 @@ function ProfileScreen({navigation, route}) {
                     <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={styles.buttonContainer}onPress={() => navigation.navigate("EditProfile")}>
                             <View>
-                                <Image
+                                {/*<Image
                                     source={require('../constants/images/profile.png')}
-                                    style={{marginVertical:40,height:40, width:40}}
-                                />
+                                    style={{marginVertical: 40, height: 40, width: 40}}
+                                />*/}
                             </View>
                         </TouchableOpacity>
                         <View style={{
@@ -88,10 +88,10 @@ function ProfileScreen({navigation, route}) {
                     <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={styles.buttonContainer}onPress={() => navigation.navigate("AllOrders")}>
                             <View>
-                                <Image
+                                {/*<Image
                                     source={require('../constants/images/package.png')}
                                     style={{marginVertical:40,height:40, width:40}}
-                                />
+                                />*/}
                             </View>
                         </TouchableOpacity>
                         <View style={{
@@ -111,10 +111,10 @@ function ProfileScreen({navigation, route}) {
                     <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate("AllAddress")}>
                             <View>
-                                <Image
+                                {/*<Image
                                     source={require('../constants/images/address.png')}
                                     style={{marginVertical:40,height:40, width:40}}
-                                />
+                                />*/}
                             </View>
                         </TouchableOpacity>
                         <View style={{
@@ -134,10 +134,10 @@ function ProfileScreen({navigation, route}) {
                     <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate("AllPayment")}>
                             <View>
-                                <Image
+                                {/*<Image
                                     source={require('../constants/images/card.png')}
                                     style={{marginVertical:40,height:40, width:40}}
-                                />
+                                />*/}
                             </View>
                         </TouchableOpacity>
                         <View style={{
@@ -157,10 +157,10 @@ function ProfileScreen({navigation, route}) {
                     <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={styles.buttonContainer}  onPress={() => navigation.navigate("AllComments")}>
                             <View>
-                                <Image
+                                {/*<Image
                                     source={require('../constants/images/speech-bubble.png')}
                                     style={{marginVertical:40,height:40, width:40}}
-                                />
+                                />*/}
                             </View>
                         </TouchableOpacity>
                         <View style={{
@@ -191,12 +191,12 @@ function ProfileScreen({navigation, route}) {
                     borderTopLeftRadius:60,
 
                 }}>
-                    <Image style={{
+                    {/*<Image style={{
                         height:190,
                         width:"100%",
                         borderTopRightRadius:100,
                         borderTopLeftRadius:100
-                    }} source={require("../constants/images/book.jpg")}></Image>
+                    }} source={require("../constants/images/book.jpg")} />*/}
                 </View>
 
 

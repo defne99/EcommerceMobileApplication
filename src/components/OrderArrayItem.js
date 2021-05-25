@@ -120,10 +120,10 @@ const OrderArrayItem = (props) => {
                         }}>
                             <TouchableOpacity onPress={() => onRefundPressed()}>
                                 <View>
-                                    <Image
+                                    {/*<Image
                                         source={require('../constants/images/refund.png')}
                                         style={{height:35, width:35,  top:45,elevation:1 }}
-                                    />
+                                    />*/}
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -207,10 +207,10 @@ const OrderArrayItem = (props) => {
                         }}>
                             <TouchableOpacity onPress={() => onRefundPressed()}>
                                 <View>
-                                    <Image
+                                    {/*<Image
                                         source={require('../constants/images/refund.png')}
                                         style={{marginVertical:40,height:35, width:35, left:110, top:20, }}
-                                    />
+                                    />*/}
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -294,10 +294,10 @@ const OrderArrayItem = (props) => {
                         }}>
                             <TouchableOpacity onPress={() => onRefundPressed()}>
                                 <View>
-                                    <Image
+                                    {/*<Image
                                         source={require('../constants/images/refund.png')}
                                         style={{marginVertical:40,height:35, width:35, left:110, top:20, }}
-                                    />
+                                    />*/}
                                 </View>
                             </TouchableOpacity>
                         </View>
