@@ -3,14 +3,7 @@ import {TextInput, StyleSheet} from "react-native";
 import PropTypes from "prop-types"; // properties to input
 
 const Input = (props) => {
-    const {
-        value,
-        setValue,
-        placeholderText,
-        isSecureText,
-        keyboardType,
-        autoCorrect,
-        autoCapitalize} = props;
+    const {value, setValue, placeholderText, isSecureText, keyboardType,autoCorrect,autoCapitalize, testID} = props;
     return (
         <TextInput
             placeholder={placeholderText}
@@ -21,6 +14,7 @@ const Input = (props) => {
             value={value}
             autoCorrect={autoCorrect}
             autoCapitalize={autoCapitalize}
+            testID={testID}
         />
     );
 }
@@ -39,7 +33,7 @@ const styles = StyleSheet.create({
 
 Input.propTypes = { // property types
     placeholderText: PropTypes.string,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     setValue: PropTypes.func.isRequired,
     isSecureText: PropTypes.bool,
     autoCorrect: PropTypes.bool,

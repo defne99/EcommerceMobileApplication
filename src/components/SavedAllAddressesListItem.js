@@ -27,13 +27,20 @@ const SavedAllAddressListItem = (props) => {
 
 
     function onEditPressed() {
-        _handleNavigate(navigatePage, {params: {addressId}})
+        _handleNavigate(navigatePage, {
+            addressId : addressId,
+            addressType: addressType,
+            addressCity: City,
+            addressCountry: Country,
+            postalCode: postCode,
+            full_address: openAddress
+        })
     };
 
 
     function onDeletePressed() {
         fetch("http://10.0.2.2:8080/address/remove?id=" + addressId, {
-            method: 'GET',
+            method: 'delete',
             headers: {
                 'Content-Type': 'application/json',
             },

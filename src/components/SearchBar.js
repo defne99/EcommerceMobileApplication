@@ -22,7 +22,7 @@ const SearchBar = (props) => {
                 <Icon name="ios-search" style={[styles.icon, iconStyle]} />
                 <TextInput
                     autoCorrect={false}
-                    autoCapitalize={false}
+                    autoCapitalize={'none'}
                     placeholder={placeholder}
                     style={[styles.textInput, textInputStyle]}
                     returnKeyType={returnKeyType}

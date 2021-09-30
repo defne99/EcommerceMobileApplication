@@ -20,6 +20,28 @@ import Input from './Input';
 
 const DrawerContent = ({route, navigation}) => {
     const [userName, setUserName] = useState("");
+    const getUser = () => {
+        fetch("http://10.0.2.2:8080/user/getByID?id=" + global.userid, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response =>response.json())
+            .then(json => {
+                global.username = json.name;
+                global.mobile = json.mobile;
+                console.log(username);
+
+            })
+            .catch(error => {
+                Alert("Error", "An error has occurred!");
+            })
+
+    };
+    useEffect(()=>{
+        getUser();
+    },[]);
 
     const _handleDrawerNavigate = (pageName) => {
         navigation.navigate(pageName);
@@ -63,6 +85,7 @@ const DrawerContent = ({route, navigation}) => {
         );
     }
     else{
+        getUser();
         return (
             <SafeAreaView style={styles.container}>
 

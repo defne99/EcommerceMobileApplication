@@ -24,7 +24,14 @@ const SavedAllCreditCardItem = (props) => {
     } = props;
 
     function onEditCreditPressed() {
-        _handleNavigate(navigatePage, {params: {creditCardId}})
+        _handleNavigate(navigatePage, {
+            creditCardId: creditCardId,
+            cardName: Name,
+            cardType: cardType,
+            cardNumber: creditCardNumber,
+            date:expire_Date,
+            cvv:cvv
+        })
     };
 
 
